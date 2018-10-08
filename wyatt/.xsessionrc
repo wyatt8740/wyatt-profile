@@ -1,0 +1,36 @@
+# PATH variable stuff stolen from ~/.bashrc
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+PATH="$PATH:/usr/sbin:/sbin"
+
+# AT&T AST programs
+PATH="$PATH:/home/wyatt/development/att/ast/arch/linux.i386-64/bin"
+export LD_LIBRARY_PATH="/home/wyatt/development/att/ast/arch/linux.i386-64/lib"
+
+# end of ~/.bashrc theft
+
+# ibus (temporarily broken in debian sid, using SCIM instead for japanese)
+#export GTK_IM_MODULE=ibus
+#export XMODIFIERS=@im=ibus
+#export QT_IM_MODULE=ibus
+
+# SCIM
+export XMODIFIERS='@im=SCIM'
+export GTK_IM_MODULE='scim'
+export QT_IM_MODULE='scim'
+
+# disable screen turning off
+xset s off
+xset dpms 0 0 0
+# xset -dpms might work, but would be reset when turning off the screen with `xset dpms force off`
+# . $HOME/.bashrc
+export GTK_OVERLAY_SCROLLING=0
+# wacom serial X201 tablet calibration
+$HOME/bin/calib
+# tablet button shortcuts
+# setkeycodes e078  
+xbindkeys
+true
+# xhost +local:root
+xhost +si:localuser:root

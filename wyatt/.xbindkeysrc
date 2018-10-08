@@ -1,0 +1,31 @@
+# "xdotool key ctrl+Page_Up"
+# b:8
+
+# "xdotool key ctrl+Page_Down"
+# b:9
+
+# "xdotool key Left"
+# b:8
+
+# "xdotool key Right"
+# b:9
+
+#Tablet Rotate button (run rotate script)
+"/home/wyatt/bin/rotate-cycle-normal"
+    m:0x0 + c:161
+
+#Tablet Rotate button (run rotate script, invert)
+"/home/wyatt/bin/rotate-cycle-invert"
+    m:0x0 + c:157
+
+"/home/wyatt/bin/rotate-cycle-invert"
+    XF86TaskPane
+
+# lock button
+"/home/wyatt/bin/touchscreen-toggle"
+    m:0x0 + c:149
+
+# florence
+#"/usr/bin/florence"
+#    m:0x0 + c:141
+

@@ -1,0 +1,3 @@
+#!/bin/sh
+rxvt +sb -name fvwm-run-dialog -title "run" -geometry 80x1+224+360 --keysym.0xFF0D: " &\nexit\n" -e bash --init-file \
+$HOME/.fvwm/run-dialog.bash-init

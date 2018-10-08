@@ -1,0 +1,5 @@
+decorations all
+decorations all
+# kludges fix_window_pos
+background "#222222"
+window_type utility
