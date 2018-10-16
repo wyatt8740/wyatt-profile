@@ -1,0 +1,459 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* only needed once */
+
+
+/* disable "block image" in context menu */
+#context-blockimage {
+	display: none !important;
+}
+
+/* disable 'send image' in context menu */
+#context-sendimage {
+  display: none !important;
+} 
+
+#context-sendpage {
+  display: none !important;
+}
+
+#context-sendvideo {
+  display: none !important;
+}
+
+#context-audio {
+  display: none !important;
+}
+
+#context-sendlink {
+  display: none !important;
+}
+
+#context-sendframe {
+  display: none !important;
+}
+
+/*
+ * https URL bar colour
+ */
+#urlbar[level] .autocomplete-textbox-container >* {background-color: #FFFFFF !important; color: #000000 !important; }
+
+
+toolbar, menubar { /* THIS IS THE OVERRIDE I NEEDED ALL ALONG!!!! */
+  -moz-appearance: none !important;
+}
+
+
+
+
+/*
+ * tooltip black-on-black fix
+ */
+
+
+tooltip {
+  -moz-appearance: none !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+tooltiptext {
+  -moz-appearance: none !important;
+  color: #FFFFFF !important;
+}
+
+.tooltip .tooltiptext{
+  -moz-appearance: none !important;
+  color: #000000 !important;
+}
+
+.tooltip:hover .tooltiptext{
+  -moz-appearance: none !important;
+  color: #000000 !important;
+}
+
+
+
+
+/*
+ * The following forces the menubars to be the correct color and
+ * look good. Because one of the themes I use is stupid.
+ */
+/*disabled for a different theme, but this is the working one*/
+/* the next two elements: */
+
+/* RADIANCE VERSION */
+/*
+#toolbar-menubar {
+  moz-appearance: none !important;
+  background-color: #E0D6BA !important;
+  border-bottom-color: #D5C9A8 !important;
+}
+
+#nav-bar {
+  moz-appearance: none !important;
+  border-top-color: #FCFCFA !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+#PersonalToolbar {
+  moz-appearance: none !important;
+  border-top-color: #FCFCFA !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+#navigator-toolbox {
+  moz-appearance: none !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+menubar > .toolbar-box {
+  moz-appearance: none !important;
+  background-color: #E0D6BA !important;
+}
+
+.collapsed-tray-holder {
+  moz-appearance: none !important;
+  border-top-color: #FCFCFA !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+.collapsed-tray {
+  border-right-color: #EAE5DD !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+.collapsed-tray-spacer {
+  border-left-color: #EAE5DD !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+.collapsed-tray-holder {
+  border-bottom-color: #EAE5DD !important;
+}
+
+#moz_tb_collapsed_PersonalToolbar {
+  border-right-color: #EAE5DD !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+#FindToolbar {
+  moz-appearance: none !important;
+  border-top-color: #FCFCFA !important;
+  border-bottom-color: #EAE5DD !important;
+
+}
+
+.tabbrowser-strip {
+  moz-appearance: none !important;
+  border-top-color: #FCFCFA !important;
+  border-bottom-color: #EAE5DD !important;
+}
+
+.toolbargrippy-texture {
+  moz-appearance: none !important;
+  color: #EAE5DD !important;
+  background-image:url(data:image/gif;base64,R0lGODlhBgADAKEBAG5zdf///////////yH5BAEKAAIALAAAAAAGAAMAAAIGlHMmYKwFADs=) !important;
+}
+
+.toolbargrippy-arrow {
+  moz-appearance: none !important;
+  color: #EAE5DD !important;
+  list-style-image: url(data:image/gif;base64,R0lGODlhBgADAKEDADQ2N25zdf////D7/yH5BAEKAAMALAAAAAAGAAMAAAIIhB0DETIP3CgAOw==) !important;
+}
+*/
+/*
+.toolbargrippy-texture {
+  moz-appearance: none !important;
+  color: #EAE5DD !important;
+  background-image: url("file:///home/wyatt/.mozilla/seamonkey/bihwm5tz.default/chrome/tbgrip-texture.gif") !important;
+}
+
+
+.toolbargrippy-arrow {
+  moz-appearance: none !important;
+  color: #EAE5DD !important;
+  list-style-image: url("file:///home/wyatt/.mozilla/seamonkey/bihwm5tz.default/chrome/tbgrip-arrow.gif") !important;
+}
+*/
+/*
+.toolbar-grippy {
+  moz-appearance: none !important;
+  border-right-color: transparent !important;
+}
+
+#toolbar-menubar .toolbar-grippy {
+  moz-appearance: none !important;
+  border-right-color: transparent !important;
+}
+
+.toolbar-holder {
+  moz-appearance: none !important;
+  border-left-color: #EAE5DD !important;
+}
+
+
+#toolbar-menubar .toolbar-holder {
+  moz-appearance: none !important;
+  border-left-color: #D5C9A8 !important;
+}
+*/
+
+
+
+
+/* END OF RADIANCE */
+
+
+
+/*
+ * Fixes the same ugliness in drop-down dialogs and menus
+ */
+/* disabled, but this is a working one */
+
+/*
+menuitem, menupopup, popup { 
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+*/
+
+
+
+
+
+/* AMBIANCE VERSION */
+
+/* Only use when using a dark theme! */
+
+
+/* MENU BAR COLORING */
+
+#toolbar-menubar {
+      moz-appearance: none !important;
+      background-color: #3C3B37 !important;
+      border-bottom-color: #373633 !important;
+}
+
+#msgToolbar .toolbar-primary {
+      moz-appearance: none !important;
+      -moz-appearance: none;
+}
+
+/*#msgToolbar > toolbar, menubar {
+  -moz-appearance: toolbar;
+}*/
+
+
+#toolbar-menubar {
+      moz-appearance: none !important;
+      background-color: #3C3B37 !important;
+      border-bottom-color: #373633 !important;
+}
+
+
+menubar > .toolbar-box {
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+
+// fix dropdowns:
+menuitem, menupopup, popup { 
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+
+/* should be best rule for menubars. */
+/* 6 february 2017 */
+toolbar[type="menubar"] {
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+
+/*
+menuitem, menupopup, popup { 
+  moz-appearance: none !important;
+  color: #000000 !important;
+}
+*/
+
+#nav-bar {
+  moz-appearance: none !important;
+  border-top-color: #F8F8F7 !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+#PersonalToolbar {
+  moz-appearance: none !important;
+  border-top-color: #F8F8F7 !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+#navigator-toolbox {
+  moz-appearance: none !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+
+.collapsed-tray-holder {
+  moz-appearance: none !important;
+  border-top-color: #F8F8F7 !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+.collapsed-tray {
+  border-right-color: #E2E0DE !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+.collapsed-tray-spacer {
+  border-left-color: #E2E0DE !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+.collapsed-tray-holder {
+  border-bottom-color: #E2E0DE !important;
+}
+
+#moz_tb_collapsed_PersonalToolbar {
+  border-right-color: #E2E0DE !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+#FindToolbar {
+  moz-appearance: none !important;
+  border-top-color: #F8F8F7 !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+.tabbrowser-strip {
+  moz-appearance: none !important;
+  border-top-color: #F8F8F7 !important;
+  border-bottom-color: #E2E0DE !important;
+}
+
+.toolbargrippy-texture {
+  moz-appearance: none !important;
+  color: #E2E0DE !important;
+/*  background-image: url("file:///home/wyatt/.mozilla/seamonkey/bihwm5tz.default/chrome/tbgrip-texture.gif") !important; */
+  background-image:url(data:image/gif;base64,R0lGODlhBgADAKEBAG5zdf///////////yH5BAEKAAIALAAAAAAGAAMAAAIGlHMmYKwFADs=) !important;
+}
+
+.toolbargrippy-arrow {
+  moz-appearance: none !important;
+  color: #E2E0DE !important;
+/*  list-style-image: url("file:///home/wyatt/.mozilla/seamonkey/bihwm5tz.default/chrome/tbgrip-arrow.gif") !important;*/
+  list-style-image: url(data:image/gif;base64,R0lGODlhBgADAKEDADQ2N25zdf////D7/yH5BAEKAAMALAAAAAAGAAMAAAIIhB0DETIP3CgAOw==) !important;
+}
+
+.toolbar-grippy {
+  moz-appearance: none !important;
+  border-right-color: transparent !important;
+}
+
+#toolbar-menubar .toolbar-grippy {
+  moz-appearance: none !important;
+  border-right-color: transparent !important;
+}
+
+.toolbar-holder {
+  moz-appearance: none !important;
+  border-left-color: #E2E0DE !important;
+}
+
+#toolbar-menubar .toolbar-holder {
+  moz-appearance: none !important;
+  border-left-color: #373633 !important;
+}
+
+
+/* END OF AMBIANCE */
+
+
+
+
+
+/* AMBIANCE ONLY */
+/*
+tooltip {
+  color: #FFFFFF !important;
+}
+
+tooltiptext {
+  color: #FFFFFF !important;
+}
+*/
+
+
+/*
+tooltip, .tooltip,tooltiptext, .tooltiptext, tooltip-label, .tooltip-label, aTooltipSet {
+  background-color: #3A3A3A !important;
+  color: #FFFFFF !important;
+}
+
+tooltip[titletip="true"] {
+  max-width: none;
+  background-color: #3A3A3A !important;
+  color: #FFFFFF !important;
+}
+*/
+
+/*
+ * Backup of original mostly working css below
+*/
+
+/*
+tooltip, .tooltip,tooltiptext, .tooltiptext, tooltip-label, .tooltip-label, aTooltipSet {
+  background-color: #3A3A3A !important;
+  color: #FFFFFF !important;
+}
+
+tooltip[titletip="true"] {
+  max-width: none;
+  background-color: #3A3A3A !important;
+  color: #FFFFFF !important;
+}*/
+
+/* OLD AMBIANCE VERSION */
+/*
+#toolbar-menubar {
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+menubar > .toolbar-box {
+  moz-appearance: none !important;
+  background-color: #3C3B37 !important;
+}
+*/
+
+/* move findbar close button to left side */
+.findbar-closebutton {
+  -moz-box-ordinal-group: 0 !important;
+}
+
+/* hide search bar resizing grip, but leave it usable. It looks ugly when visible. */
+/* document.querySelector("#urlbar-search-splitter").style.opacity=0; */
+#urlbar-search-splitter {
+  opacity: 0 !important;
+}
+
+/*#searchbar {
+  height: 28px;
+}*/
+
+/*#navigator-toolbox toolbar[iconsize="small] toolbarbutton .toolbarbutton-icon {
+  height: 16px !important;
+}*/
+
+/*.searchbar-engine-button {
+  height: 16px !important;
+}*/
+
+.toolbarbutton-icon {
+/* With the move to GTK3 comes a bug in the 'search' toolbar field; it is taller
+   than the URL bar.
+   This forces it to the correct height for my setup. */
+   height: 16px !important;
+/*    margin-bottom: 20px;
+    margin-top: 20px;*/
+/*  box-sizing: content-box;*/
+/*    border: 5px;*/
+}
