@@ -100,7 +100,7 @@ sudo apt-get -y install git subversion binutils gcc g++ libsdl-image1.2-dev \
      libxcb-dri2-0-dev libxcb1-dev libxext-dev libxfixes-dev libxfont-dev \
      libxi-dev libxinerama-dev libxkbcommon-dev libxkbfile-dev libxmu-dev \
      libxmuu-dev libxrandr-dev libxrender-dev libxshmfence-dev libxss-dev \
-     libxres-dev libxt-dev libxtst-dev libxxf86dga-dev libxf86vm-dev \
+     libxres-dev libxt-dev libxtst-dev libxxf86dga-dev libxxf86vm-dev \
      libxft-dev libxdmcp-dev libxdamage-dev libxcursor-dev libxcomposite-dev \
      libxau-dev libx11-dev libx11-xcb-dev libxv-dev libxml2-dev \
      libncurses-dev libncurses5-dev libncursesw5-dev libncurses6 libncursesw6 \
