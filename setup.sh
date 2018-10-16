@@ -89,7 +89,7 @@ sudo apt-get -y install git subversion binutils gcc g++ libsdl-image1.2-dev \
      libgtk2.0-dev libgtk-3-dev libgtk2-perl libgtk3-perl libgtk2.0-bin \
      libgtk-3-bin libgtk2.0-common libgtk-3-common libgtkglext1-dev \
      libgtksourceview2.0-dev perl perl-base perl-tk openssh-client \
-     openssh-server sshfs emacs curl libcurl3 libcurl3-gnutls \
+     openssh-server sshfs emacs curl \
      libcurl4-gnutls-dev wget build-essential make cmake automake devscripts \
      autoconf m4 libstdc++6 libxcb-glx0-dev libva-glx2 libglx-mesa0 libglx0 \
      libglu1-mesa-dev libglew-dev libglapi-mesa libgl1-mesa-dri \
