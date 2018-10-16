@@ -198,4 +198,30 @@ sudo make install
 set +x
 continueok
 
+echo "Adding fvwm as a provider for x-session-manager."
+set -x
+# add fvwm2 as an x-session-manager provider
+sudo update-alternatives --install update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/bin/fvwm2 55
+set +x
+echo "I've just added fvwm2 as an available x-session-manager."
+echo "Please select your preferred X session."
+set -x
+sudo update-alternatives --config x-session-manager
+set +x
+# allow ctrl+alt+backspace to restart X server
+# (debian specific maybe)
+if [ -f /etc/default/keyboard ]; then
+  echo "Attempting to add an option to restart the X server with ctrl+alt+backspace"
+  echo "to /etc/default/keyboard."
+  set -x
+  TEMPKEYBOARD="$(mktemp --tmpdir=/tmp keyboarddefaultXXX)"
+  sed 's/XKBOPTIONS=""/XKBOPTIONS="terminate:ctrl_alt_bksp"/g' < /etc/default/keyboard > "$TEMPKEYBOARD"
+  cat "$TEMPKEYBOARD" > /etc/default/keyboard
+  rm "$TEMPKEYBOARD"
+  set +x
+else
+  echo "WARNING: /etc/default/keyboard was not found. You may have to manually"
+  echo "configure XKB/X11 to allow ctrl+alt+backspace to restart the server."
+fi
+continueok
 echo "Reached end of setup script! Exiting."
