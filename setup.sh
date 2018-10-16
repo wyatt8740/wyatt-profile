@@ -34,12 +34,12 @@ set -x
 sudo apt-get -y install ksh fvwm stalonetray hsetroot compton xterm rxvt
 set +x
 continueok
-echo "Installing x11-apps (for xwd/xclock), x11-server-utils (xsetroot),  and"
+echo "Installing x11-apps (for xwd/xclock), x11-xserver-utils (xsetroot),  and"
 echo "imagemagick for use with my screenshot-taking GUI program (xwdui). Also"
 echo "installing both versions of Python, of which only one version (2) is strictly"
 echo "necessary, but it's good to have both."
 set -x
-sudo apt-get -y install x11-apps imagemagick x11-server-utils python python3 python-tk python3-tk
+sudo apt-get -y install x11-apps imagemagick x11-xserver-utils python python3 python-tk python3-tk
 set +x
 continueok
 echo "Installing further dependencies of my init scripts. These include xindkeys,"
@@ -109,7 +109,8 @@ sudo apt-get -y install git subversion binutils gcc g++ libsdl-image1.2-dev \
  set +x
 continueok
 echo "Installing some multimedia programs, tools, libraries, and development"
-echo "headers."
+echo "headers (basically, everything that my ffmpeg build needs except for"
+echo "libdvdcss)."
 set -x
 sudo apt-get install libx264-dev libx265-dev libfdk-aac-dev libogg-dev \
      libvorbis-dev libtheora-dev libspeex-dev libvpx-dev libflac-dev flac \
@@ -118,7 +119,10 @@ sudo apt-get install libx264-dev libx265-dev libfdk-aac-dev libogg-dev \
      libgstreamer-plugins-bad1.0-dev libgstreamer-plugins-base1.0-dev \
      mpv i965-va-driver libvdpau-va-gl1 libtwolame-dev libwebp-dev zlib1g-dev \
      libdvdnav-dev libdvdread-dev cdparanoia libcdparanoia-dev libcdio-utils \
-     cdrdao cue2toc 
+     cdrdao cue2toc libvo-amrwbenc-dev libopencore-amrwb-dev \
+     libopencore-amrnb-dev libgmp-dev libssl-dev libvidstab-dev libcaca-dev \
+     libfreetype6-dev libfribidi-dev libfontconfig1-dev libxml2-dev libaom-dev
+     
      
 set +x
 continueok
@@ -143,7 +147,55 @@ cd "$STARTDIR""/wyatt"
 tar -c -f - * .[A-Z]* .[0-9]* .[a-z]* | tar -C "$HOME" -x -v -f -
 cd "$HOME/"".config"
 ln -s "$HOME""/.fvwm/config" "fvwm"
+cd "$STARTDIR"
 set +x
-echo "Reminder: You may want to install a dvdcss library"
-echo "(not in the debian repositories) before trying to do anything like"
-echo "building ffmpeg or mplayer from sources."
+
+
+echo "Checking out, compiling, and installing libdvdcss."
+set -x
+mkdir -p "$HOME""/development"
+cd "$HOME""/development"
+if [ ! -d "libdvdcss" ]; then
+  git clone 'http://code.videolan.org/videolan/libdvdcss.git'
+fi
+cd libdvdcss/
+git pull
+autoreconf -i
+./configure --prefix=/usr
+make
+sudo make install
+cd "$STARTDIR"
+set +x
+continueok
+
+
+# echo '======ffmpeg configuration======:'
+# echo '--prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom'
+
+# echo "Reminder: You may want to install a dvdcss library (not in the debian"
+# echo "repositories) before trying to do anything like building ffmpeg or"
+# echo "mplayer from sources."
+
+
+echo "Checking out, compiling, and installing ffmpeg. This will take a while."
+set -x
+mkdir -p "$HOME""/development"
+cd "$HOME""/development"
+if [ ! -d "ffmpeg" ]; then
+  git clone 'https://git.ffmpeg.org/ffmpeg.git'
+fi
+cd ffmpeg/
+git pull
+# ffmpeg configure
+./configure --prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom
+make
+set +x
+echo "ffmpeg installation will follow upon confirmation that the compile succeeded."
+continueok
+set -x
+echo "Installing ffmpeg (performing 'make install')."
+sudo make install
+set +x
+continueok
+
+echo "Reached end of setup script! Exiting."
