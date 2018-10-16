@@ -1,0 +1,20 @@
+#! /bin/ksh
+if [ -z "$(ps aux | grep stalonetray | grep -v grep)" ]; then
+    echo "Starting stalonetray."
+    # Starts a stand alone tray program so that I can use common applet things
+    # in a CDE desktop.
+    stalonetray --kludges force_icons_size --icon-size 24 --window-strut none > /dev/null 2>&1 & disown
+    # give it a moment so we're pretty sure it's initialized before we start
+    # throwing programs at it
+    sleep 2
+    # Network manager applet
+    nm-applet > /dev/null 2>&1 & disown
+    # SCIM input method applet
+    scim > /dev/null 2>&1 & disown
+    # ALSA sound mixer applet
+    pnmixer > /dev/null 2>&1 & disown
+    # Mate power manager for battery indicator
+    mate-power-manager > /dev/null 2>&1 & disown
+else
+    echo "stalonetray already running; nothing done."
+fi

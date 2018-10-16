@@ -1,0 +1,29 @@
+#! /bin/ksh
+
+# Used by FVWM startup (see bottom of ~/.fvwm2rc).
+# Could also be called from .dtprofile for CDE.
+
+# contains tray and individual tray item initialization stuff
+# i.e. (volume icon, SCIM input manager, network-manager applet)
+/home/wyatt/bin/cde-tray
+
+# Run clock, if it's not already running.
+xclock()
+{
+    LC_ALL=C /bin/xclock -d -brief -norender -padding 2 "$@"
+}
+if [ -z "$(ps aux | grep xclock | grep -v grep)" ]; then
+    xclock & disown
+fi
+
+# preload wineserver to speed up wine app startup
+if [ -z "$(ps aux | grep wineserver | grep -v grep)" ]; then
+  wineserver -p & disown
+fi
+
+if [ -z "$(ps aux | grep wineserver | grep -v grep)" ]; then
+  /usr/bin/xbindkeys & disown
+fi
+
+# don't fail
+true
