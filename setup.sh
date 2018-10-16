@@ -224,4 +224,10 @@ else
   echo "configure XKB/X11 to allow ctrl+alt+backspace to restart the server."
 fi
 continueok
+echo "Downloading Seamonkey EarlyBlue theme to ~/.mozilla so I have it when I"
+echo "need it (this theme matches well with the CDE motif look I'm shooting for)."
+wget 'https://addons.thunderbird.net/seamonkey/downloads/latest/earlyblue/addon-3050-latest.xpi' \
+     -O ~/.mozilla/
+continueok
+
 echo "Reached end of setup script! Exiting."
