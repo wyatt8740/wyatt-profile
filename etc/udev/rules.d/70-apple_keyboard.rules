@@ -1,0 +1,4 @@
+# apple aluminum keyboards should be associated with hid_apple, not usbhid
+# or hid_generic.
+# this should force their bindings.
+ACTION=="add", KERNEL=="0003:05AC:021D.*", SUBSYSTEM==HID, DRIVER=="hid-generic", RUN+="/bin/bash -c 'echo $kernel > /sys/bus/hid/drivers/hid-generic/unbind'", RUN+="modprobe hid_apple", RUN+="/bin/bash -c 'echo $kernel > /sys/bus/hid/drivers/apple/bind'"

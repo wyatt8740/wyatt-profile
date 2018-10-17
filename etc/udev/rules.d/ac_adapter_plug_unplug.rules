@@ -1,0 +1,5 @@
+# this handles actions performed when plugging in or unplugging the AC adapter
+# on AC
+SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/etc/pm/power.d/ac-adapter-brightness connected"
+# on battery
+SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/etc/pm/power.d/ac-adapter-brightness disconnected"

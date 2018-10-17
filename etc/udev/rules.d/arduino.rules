@@ -1,0 +1,3 @@
+# Arduino Uno (r3)
+ATTR{idVendor}=="2341", ATTR{idProduct}=="0001", GROUP="usb"
+

@@ -1,0 +1,14 @@
+[enable hibernation/suspend]
+Identity=unix-user:*
+Action=org.freedesktop.upower.hibernate
+ResultActive=yes
+
+[enable hibernation/suspend 2]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate
+ResultActive=yes
+
+[enable hibernation/suspend 3]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate-multiple-sessions
+ResultActive=yes

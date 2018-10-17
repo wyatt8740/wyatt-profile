@@ -1,0 +1,120 @@
+[Allow all users to suspend]
+Identity=unix-user:*
+Action=org.freedesktop.login1.suspend
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to suspend regardless of others]
+Identity=unix-user:*
+Action=org.freedesktop.login1.suspend-multiple-sessions
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to suspend regardless of others, ignoring inhibits]
+Identity=unix-user:*
+Action=org.freedesktop.login1.suspend-ignore-inhibit
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to power]
+Identity=unix-user:*
+Action=org.freedesktop.login1.power-off
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to power, regardless of other users logged in]
+Identity=unix-user:*
+Action=org.freedesktop.login1.power-off-multiple-sessions
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to power, ignoring inhibits]
+Identity=unix-user:*
+Action=org.freedesktop.login1.power-off-ignore-inhibit
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to reboot]
+Identity=unix-user:*
+Action=org.freedesktop.login1.reboot
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to reboot, regardless of other users logged in]
+Identity=unix-user:*
+Action=org.freedesktop.login1.reboot-multiple-sessions
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to reboot, ignoring inhibits]
+Identity=unix-user:*
+Action=org.freedesktop.login1.reboot-ignore-inhibit
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to hibernate]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to hibernate, even with multiple users]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate-multiple-sessions
+ResultAny=yes
+ResultActive=yes
+
+[Allow all users to hibernate, ignoring inhibits]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate-ignore-inhibit
+ResultAny=yes
+ResultActive=yes
+
+[Allow brightness control to work]
+Identity=unix-user:*
+Action=org.mate.power.backlight-helper
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow brightness control to work]
+Identity=unix-user:*
+Action=org.mate.randr.install-system-wide
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow power manager hibernation]
+Identity=unix-user:*
+Action=org.freedesktop.ConsoleKit.Manager.Hibernate
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow power manager hibernation 0]
+Identity=unix-user:*
+Action=org.freedesktop.ConsoleKit.Manager.CanHibernate
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow power manager hibernation 2]
+Identity=unix-user:*
+Action=org.freedesktop.consolekit.system.hibernate
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow power manager suspend]
+Identity=unix-user:*
+Action=org.freedesktop.ConsoleKit.Manager.Suspend
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+
+[Allow power manager suspend 2]
+Identity=unix-user:*
+Action=org.freedesktop.consolekit.system.suspend
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes

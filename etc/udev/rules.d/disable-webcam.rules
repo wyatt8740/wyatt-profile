@@ -1,0 +1,2 @@
+# x201 built-in webcam
+ACTION=="add", ATTR{idVendor}=="17ef", ATTR{idProduct}=="4816", ATTR{authorized}:="0"

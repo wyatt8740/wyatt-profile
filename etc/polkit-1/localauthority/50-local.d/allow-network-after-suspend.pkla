@@ -1,0 +1,6 @@
+[Allow control of network connections]
+Identity=unix-user:wyatt;
+Action=org.freedesktop.NetworkManager.network-control
+ResultAny=yes
+ResultInactive=yes
+ResultActive=yes
