@@ -1,12 +1,13 @@
 #! /bin/bash
 STARTDIR="$PWD"
 continueok() {
-  read -p "If all went well, press return to continue. Otherwise, ctrl+c to quit."
+  echo "If all went well with the last operation, press Return to continue."
+  read -p "Otherwise, press Ctrl+C (^C) to quit."
   echo "OK."
 }
 
 continuesure() {
-  read -p "Is this OK?"
+  read -p "Is this OK? (Return to continue, Ctrl+C (^C) to quit)"
   echo "OK."
 }
 
@@ -21,67 +22,76 @@ su -c 'apt-get -y install sudo; adduser '"$USER"' sudo'
 set +x
 echo "If all went well, we should have sudo installed and the user ""$USER"
 echo "should be granted permission to use it."
-continueok
-echo "First, running apt-get update to make sure we aren't going to hit 404's"
+echo "Next up: Running apt-get update to make sure we aren't going to hit 404's"
 echo "due to an out-of-date database."
+continueok
 set -x
 sudo apt-get update
 set +x
-continueok
+echo "Next up:"
 echo "Installing ksh, FVWM, stalonetray, hsetroot, xterm, rxvt, and compton (the bare"
 echo "essentials)."
+continueok
 set -x
 sudo apt-get install ksh fvwm stalonetray hsetroot compton xterm rxvt
 set +x
-continueok
+echo "Next up:"
 echo "Installing x11-apps (for xwd/xclock), x11-xserver-utils (xsetroot),  and"
 echo "imagemagick for use with my screenshot-taking GUI program (xwdui). Also"
 echo "installing both versions of Python, of which only one version (2) is strictly"
-echo "necessary, but it's good to have both."
+echo "necessary right now, but it's good to have both."
+continueok
 set -x
 sudo apt-get install x11-apps imagemagick x11-xserver-utils python python3 python-tk python3-tk
 set +x
-continueok
+echo "Next up:"
 echo "Installing further dependencies of my init scripts. These include xindkeys,"
 echo "pnmixer, nm-tray (network-manager tray applet), mate-power-manager/mate-terminal"
 echo "(and the rest of MATE unfortunately... My environment could use some"
 echo "trimming here)."
+continueok
 set -x
 sudo apt-get install xbindkeys pnmixer nm-tray mate-power-manager mate-terminal
 set +x
-continueok
+echo "Next up:"
 echo "Installing SCIM (input method software) and scim-anthy (for CJK input)."
+continueok
 set -x
 sudo apt-get install scim scim-gtk-immodule scim scim-im-agent scim-anthy scim-modules-table scim-modules-socket scim-tables-ja libscim8v5 libanthy1 libanthyinput0 anthy anthy-common kasumi
 set +x
-continueok
+echo "Next up:"
 echo "Installing GNU Unifont (a font I like)."
+continueok
 set -x
 sudo apt-get install ttf-unifont unifont psf-unifont xfonts-unifont
 set +x
-continueok
+echo "Next up:"
 echo "Installing xvkbd (on-screen keyboard I mostly like) and xdotool (for"
 echo "automating tasks)."
+continueok
 set -x
 sudo apt-get install xvkbd xdotool
 set +x
-continueok
+echo "Next up:"
 echo "Installing mcomix, my favorite image viewer."
+continueok
 set -x
 sudo apt-get install mcomix
 set +x
-continueok
+echo "Next up:"
 echo "Installing Mozilla Firefox, a decent browser until I can get Seamonkey built."
+continueok
 set -x
 sudo apt-get install firefox
 set +x
-continueok
+echo "Next up:"
 echo "Installing some more development-oriented stuff (emacs, binutils, gcc, diff, git,"
 echo "subversion, mercurial, perl, ssh, curl, wget, GNU make, cmake,"
 echo "build-essential, debian devscripts, autoconf, m4, libstdc++6,"
 echo "OpenGL (MESA) stuff, X11 stuff, libxml, curses, some compression software,"
 echo "development headers for common libraries, etc)."
 echo "This will likely take a while. It's a LOT of stuff."
+continueok
 set -x
 sudo apt-get install git subversion binutils gcc g++ libsdl-image1.2-dev \
      libsdl-mixer1.2-dev libsdl-sound1.2-dev libsdl-ttf2.0-dev libsdl1.2-dev \
@@ -106,11 +116,12 @@ sudo apt-get install git subversion binutils gcc g++ libsdl-image1.2-dev \
      libncurses-dev libncurses5-dev libncursesw5-dev libncurses6 libncursesw6 \
      libtinfo-dev zlib1g-dev xz-utils liblzma-dev p7zip-full libarchive-dev \
      zip unzip 
- set +x
-continueok
+set +x
+echo "Next up:"
 echo "Installing some multimedia programs, tools, libraries, and development"
 echo "headers (basically, everything that my ffmpeg build needs except for"
 echo "libdvdcss)."
+continueok
 set -x
 sudo apt-get install libx264-dev libx265-dev libfdk-aac-dev libogg-dev \
      libvorbis-dev libtheora-dev libspeex-dev libvpx-dev libflac-dev flac \
@@ -125,8 +136,9 @@ sudo apt-get install libx264-dev libx265-dev libfdk-aac-dev libogg-dev \
      
      
 set +x
-continueok
+echo "Next up:"
 echo "Installing system management tools (gparted)."
+continueok
 set -x
 sudo apt-get install gparted
 set +x
@@ -150,8 +162,9 @@ ln -s "$HOME""/.fvwm/config" "fvwm"
 cd "$STARTDIR"
 set +x
 
-
+echo "Next up:"
 echo "Checking out, compiling, and installing libdvdcss."
+continueok
 set -x
 mkdir -p "$HOME""/development"
 cd "$HOME""/development"
@@ -166,9 +179,11 @@ make
 sudo make install
 cd "$STARTDIR"
 set +x
+echo "Should now be done installing libdvdcss."
+
+echo "Next up:"
+echo "Checking out, compiling, and installing ffmpeg. This will take a while."
 continueok
-
-
 # echo '======ffmpeg configuration======:'
 # echo '--prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom'
 
@@ -176,8 +191,6 @@ continueok
 # echo "repositories) before trying to do anything like building ffmpeg or"
 # echo "mplayer from sources."
 
-
-echo "Checking out, compiling, and installing ffmpeg. This will take a while."
 set -x
 mkdir -p "$HOME""/development"
 cd "$HOME""/development"
@@ -196,9 +209,10 @@ set -x
 echo "Installing ffmpeg (performing 'make install')."
 sudo make install
 set +x
+echo "If everything ran properly, ffmpeg should now be installed."
+echo "Next up:"
+echo "Adding fvwm (already installed) as a provider for x-session-manager."
 continueok
-
-echo "Adding fvwm as a provider for x-session-manager."
 set -x
 # add fvwm2 as an x-session-manager provider
 sudo update-alternatives --install update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/bin/fvwm2 55
@@ -208,6 +222,9 @@ echo "Please select your preferred X session."
 set -x
 sudo update-alternatives --config x-session-manager
 set +x
+echo "Next up:"
+echo "Adding rule to allow ctrl-alt-backspace to restart the X server."
+continueok
 # allow ctrl+alt+backspace to restart X server
 # (debian specific maybe)
 if [ -f /etc/default/keyboard ]; then
@@ -223,19 +240,23 @@ else
   echo "WARNING: /etc/default/keyboard was not found. You may have to manually"
   echo "configure XKB/X11 to allow ctrl+alt+backspace to restart the server."
 fi
-continueok
+echo "Next up:"
 echo "Downloading Seamonkey EarlyBlue theme to ~/.mozilla so I have it when I"
 echo "need it (this theme matches well with the CDE motif look I'm shooting for)."
+continueok
 set -x
 wget 'https://addons.thunderbird.net/seamonkey/downloads/latest/earlyblue/addon-3050-latest.xpi' \
      -O ~/.mozilla/
 set +x
-continueok
+echo "Next up:"
 echo "Installing Deluge daemon, Deluge GTK client, Deluge console client, and"
 echo "deluge web client."
+continueok
 set -x
 sudo apt-get install deluged deluge-gtk deluge-console deluge-web
 set +x
+echo "Next up:"
+echo "Copying udev rules and hwdb entries to /etc/udev."
 continueok
 # to do: copy policykit rules and udev rules
 # (when not using systemd as an init system, policykit rules are more
@@ -245,7 +266,6 @@ continueok
 # (also, systemd-shim appears to be out of date.)
 
 # udev
-echo "Copying udev rules and hwdb entries to /etc/udev."
 set -x
 cd "$STARTDIR""/etc/udev"
 sudo sh -c 'tar -c -f - hwdb.d/ rules.d/ | tar -C /etc/udev -x -v -f - '
@@ -254,8 +274,9 @@ sudo sh -c 'find /etc/udev/ -type f -print0 | xargs -0 chmod 644'
 sudo sh -c 'find /etc/udev/ -type d -print0 | xargs -0 chmod 755'
 set +x
 cd "$STARTDIR/etc"
+echo "Next up:"
+echo "Copying policykit rules to /etc/polkit-1 and setting correct permissions."
 continueok
-echo "Copying policykit rules to /etc/polkit-1 and setting correct permissions"
 # /etc/polkit-1/localauthority dir is only readable/writable by owner (root) on
 # my debian system. Files inside it however are globally readable and owner-
 # writable.
@@ -267,6 +288,34 @@ sudo chown -R root:root /etc/polkit-1
 sudo sh -c 'find /etc/polkit-1/ -type f -print0 | xargs -0 chmod 644'
 sudo sh -c 'find /etc/polkit-1/ -type d -print0 | xargs -0 chmod 755'
 sudo chmod 700 /etc/polkit-1/localauthority
+set +x
+echo "Next up:"
+echo "Installing intel-gpu-tools for the intel_backlight utility."
+continueok
+# my ACPI scripts (installed next) depend on intel_backlight to actually turn
+# the backlight completely _off_. LVDS laptops don't provide the means for
+# this via sysfs like eDP ones do (More accurately, the provided sysfs file
+# does nothing to the backlight state on LVDS models).
+set -x
+sudo apt-get install intel-gpu-tools
+set +x
+echo "Next up:"
+echo "Copying ACPI actions/event rules to /etc/acpi."
+continueok
+set -x
+cd "$STARTDIR""/etc/acpi"
+sudo sh -c 'tar -c -f - * | tar -C /etc/acpi -x -v -f - '
+sudo chown -R root:root /etc/udev
+sudo sh -c 'find /etc/acpi/ -type f -print0 | xargs -0 chmod 644'
+sudo sh -c 'find /etc/acpi/ -type d -print0 | xargs -0 chmod 755'
+set +x
+echo "Next up:"
+echo "Reloading ACPI rules by killing the acpi daemon (acpid). If your system is set"
+echo "to automatically spawn acpid (as it should be), it will restart. Otherwise it"
+echo "will need to be manually restarted later."
+continueok
+set -x
+sudo kill -SIGHUP `pidof acpid`
 set +x
 continueok
 echo "Reached end of setup script! Exiting."
