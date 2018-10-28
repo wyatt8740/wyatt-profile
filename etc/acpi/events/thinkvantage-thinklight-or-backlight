@@ -1,0 +1,4 @@
+# Wyatt Ward
+# hook for thinkvantage button
+event=button/prog1
+action=/etc/acpi/actions/toggle-thinklight-or-tablet-lcd.sh "%e"

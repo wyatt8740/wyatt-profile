@@ -1,0 +1,2 @@
+event=button/fnf1
+action=/etc/acpi/actions/backlight-toggle.sh "%e"

@@ -1,0 +1,6 @@
+# By Wyatt Ward.
+# Called when a thinkpad tablet's lock button is pressed
+
+event=button/screenlock SCRNLCK 00000080 00000000
+action=/etc/acpi/actions/thinkpad-tablet-lockbutton.sh %e
+

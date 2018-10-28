@@ -1,0 +1,9 @@
+# By Wyatt Ward.
+# Called when a tablet screen (in my case, a Thinkpad X201 Tablet) is
+# switched/rotated from 'laptop mode' to 'tablet mode' or vice versa.
+
+event=ibm/hotkey IBM0068:00 00000080 0000500c
+action=/usr/bin/true %e
+
+event=ibm/hotkey IBM0068:00 00000080 0000500b
+action=/usr/bin/true %e

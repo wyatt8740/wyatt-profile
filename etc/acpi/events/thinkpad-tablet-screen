@@ -1,0 +1,6 @@
+# By Wyatt Ward.
+# Called when a tablet screen (in my case, a Thinkpad X201 Tablet) is
+# switched/rotated from 'laptop mode' to 'tablet mode' or vice versa.
+
+event=video/tabletmode
+action=/etc/acpi/actions/thinkpad-tablet-screen.sh %e

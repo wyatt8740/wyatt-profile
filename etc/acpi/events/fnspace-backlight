@@ -1,0 +1,5 @@
+# Wyatt Ward
+# hook for magnify acpi event (fn+space)
+# toggle LCD backlight on/off
+event=button/zoom
+action=/etc/acpi/actions/toggle-thinklight-or-tablet-lcd.sh

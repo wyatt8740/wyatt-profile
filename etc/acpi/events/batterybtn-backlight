@@ -1,0 +1,2 @@
+event=button/battery
+action=/etc/acpi/actions/backlight-toggle.sh "%e"
