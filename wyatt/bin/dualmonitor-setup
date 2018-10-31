@@ -1,0 +1,28 @@
+#! /bin/ksh
+# try both VGA and DisplayPort outputs, ignoring failures. That way, it doesn't
+# matter what connector I'm using to connect, and it doesn't matter if I have
+# my dock connected or not (no displayport on the laptop itself; only on the
+# dock).
+
+# VGA
+xrandr --output VGA1 --auto --pos 0x0 --primary --rotate normal --output LVDS1 --auto --pos 1920x750
+
+#DisplayPort
+xrandr --output HDMI1 --auto --pos 0x0 --primary --rotate normal --output LVDS1 --auto --pos 1920x750
+
+#modesetting driver uses a different naming convention for outputs.
+# I'm using the old xf86-video-intel driver instead because it has a tearfree
+# option and works more reliably (a compositor isn't good enough for rotated
+# monitors).
+# xrandr --output HDMI-1 --auto --pos 0x0 --primary --rotate normal --output LVDS-1 --auto --pos 1920x750
+
+# remap tablet inputs to laptop's LCD area (don't use the external monitor)
+xinput map-to-output 'Wacom Serial Penabled 2FG Touchscreen Pen stylus' LVDS1
+xinput map-to-output 'Wacom Serial Penabled 2FG Touchscreen Pen eraser' LVDS1
+xinput map-to-output 'Wacom Serial Penabled 2FG Touchscreen Finger touch' LVDS1
+
+# try restarting FVWM to update it's monitor info
+FvwmCommand 'Restart'
+# don't return an error exit code if fvwm wasn't the manager
+# (or if fvwm isn't set up to listen)
+true

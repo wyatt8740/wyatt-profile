@@ -1,0 +1,23 @@
+#! /bin/ksh
+# try both VGA and DisplayPort outputs, ignoring failures. That way, it doesn't
+# matter what connector I'm using to connect, and it doesn't matter if I have
+# my dock connected or not (no displayport on the laptop itself; only on the
+# dock).
+
+#VGA
+xrandr --output VGA1 --auto --rotate left --pos 0x0 --output LVDS1 --auto --pos 1200x1300
+
+#DisplayPort
+xrandr --output HDMI1 --auto --rotate left --pos 0x0 --output LVDS1 --auto --pos 1200x1300
+
+#modesetting driver uses a different naming convention for outputs.
+# I'm using the old xf86-video-intel driver instead because it has a tearfree
+# option and works more reliably (a compositor isn't good enough for rotated
+# monitors).
+# xrandr --output HDMI-1 --auto --rotate left --pos 0x0 --output LVDS1 --auto --pos 1200x1300
+
+# try restarting FVWM to update it's monitor info
+FvwmCommand 'Restart'
+# don't return an error exit code if fvwm wasn't the manager
+# (or if fvwm isn't set up to listen)
+true

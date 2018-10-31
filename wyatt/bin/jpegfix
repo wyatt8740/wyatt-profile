@@ -1,0 +1,17 @@
+#! /bin/ksh
+massrename() {
+  for file in *"$EXT"; do mv "$file" "`basename "$file" "$EXT"`"".jpg"; done
+}
+# mmv '*.jpeg' '#1.jpg'
+# for file in *.jpeg; do mv "$file" "`basename "$file" .jpeg`"".jpg"; done
+EXT=".jpeg" massrename
+EXT=".JPG" massrename
+# mmv '*.JPG' '#1.jpg'
+#mmv '*.JPEG' '#1.jpg'
+EXT=".JPEG" massrename
+#twitter
+#mmv '*:orig.jpeg' '#1.jpg'
+#mmv '*:orig.png' '#1.png'
+#mmv '*.PNG' '#1.png'
+#mmv '*.GIF' '#1.gif'
+
