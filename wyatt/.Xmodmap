@@ -1,0 +1,17 @@
+! First, clear mod3 so we don't have spurious or other weird scroll lock
+! behavior. Since this appears to be cleared by default, it SHOULD do nothing.
+clear mod3
+! Add scroll lock modifier so it works in X
+add mod3 = Scroll_Lock
+! More sanity definitions, to make sure we're operating in normal conditions
+keycode  81 = KP_Prior KP_9 KP_Prior KP_9
+keycode  89 = KP_Next KP_3 KP_Next KP_3
+keycode 112 = Prior NoSymbol Prior
+keycode 117 = Next NoSymbol Next
+! xf86back and xf86forward to pageup/pagedown
+! xf86back
+keycode 166 = Prior NoSymbol Prior
+! xf86forward
+keycode 167 = Next NoSymbol Next
+! menu key to compose key
+keycode 135 = Multi_key

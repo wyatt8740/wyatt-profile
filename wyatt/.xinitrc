@@ -12,3 +12,5 @@ export GTK_OVERLAY_SCROLLING=0
 xset -dpms; xset s off
 #xhost +local:root
 
+# another random gnome (gtk) bug, feb 2019
+export GSETTINGS_SCHEMA_DIR=/usr/share/glib-2.0/schemas/

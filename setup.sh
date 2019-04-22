@@ -213,7 +213,8 @@ sudo apt-get install libx264-dev libx265-dev libfdk-aac-dev libogg-dev \
      libdvdnav-dev libdvdread-dev cdparanoia libcdparanoia-dev libcdio-utils \
      cdrdao cue2toc libvo-amrwbenc-dev libopencore-amrwb-dev \
      libopencore-amrnb-dev libgmp-dev libssl-dev libvidstab-dev libcaca-dev \
-     libfreetype6-dev libfribidi-dev libfontconfig1-dev libxml2-dev libaom-dev
+     libfreetype6-dev libfribidi-dev libfontconfig1-dev libxml2-dev \
+     libaom-dev libopus-dev
      
      
 set +x
@@ -266,7 +267,7 @@ echo "Next up:"
 echo "Checking out, compiling, and installing ffmpeg. This will take a while."
 continueok
 # echo '======ffmpeg configuration======:'
-# echo '--prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom'
+# echo '--prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom --enable-libopus'
 
 # echo "Reminder: You may want to install a dvdcss library (not in the debian"
 # echo "repositories) before trying to do anything like building ffmpeg or"
@@ -281,7 +282,42 @@ fi
 cd ffmpeg/
 git pull
 # ffmpeg configure
-./configure --prefix=/usr --enable-gpl --enable-nonfree --enable-version3 --enable-libx264 --enable-libvpx --enable-libxcb-shm --enable-libxcb --enable-libwebp --enable-libtheora --enable-libvorbis --enable-libx265 --enable-libvorbis --enable-libv4l2 --enable-libtwolame --enable-libspeex --enable-libxcb-shape --enable-libwebp --enable-libvo-amrwbenc --enable-libass --enable-gmp --enable-libmp3lame --enable-libfdk-aac --enable-openssl --enable-libvidstab --enable-libgme --enable-libcaca --enable-libfreetype --enable-libfribidi --enable-libfontconfig --enable-libxml2 --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libaom
+./configure \
+  --prefix=/usr \
+  --enable-gpl \
+  --enable-nonfree \
+  --enable-version3 \
+  --enable-gmp \
+  --enable-openssl \
+  --enable-libx264 \
+  --enable-libvpx \
+  --enable-libxcb-shm \
+  --enable-libxcb \
+  --enable-libwebp \
+  --enable-libtheora \
+  --enable-libvorbis \
+  --enable-libx265 \
+  --enable-libvorbis \
+  --enable-libv4l2 \
+  --enable-libtwolame \
+  --enable-libspeex \
+  --enable-libxcb-shape \
+  --enable-libwebp \
+  --enable-libvo-amrwbenc \
+  --enable-libass \
+  --enable-libmp3lame \
+  --enable-libfdk-aac \
+  --enable-libvidstab \
+  --enable-libgme \
+  --enable-libcaca \
+  --enable-libfreetype \
+  --enable-libfribidi \
+  --enable-libfontconfig \
+  --enable-libxml2 \
+  --enable-libopencore-amrnb \
+  --enable-libopencore-amrwb \
+  --enable-libaom \
+  --enable-libopus
 make
 set +x
 echo "ffmpeg installation will follow upon confirmation that the compile succeeded."
