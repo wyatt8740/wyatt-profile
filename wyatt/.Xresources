@@ -1,0 +1,256 @@
+Xcursor.size: 16
+
+! Emacs
+  Emacs.font: -*-ibm3161bitmapemacs-*-*-*-*-*-*-*-*-*-*-*-*
+
+! Rxvt
+!   Scroll bar on right side
+  Rxvt*scrollBar_right: true
+!   COLORS
+!   black
+  Rxvt*color0:	rgb:00/00/00
+  Rxvt*color10:	rgb:8a/e2/34
+  Rxvt*color11:	rgb:fc/e9/4f
+  Rxvt*color12:	rgb:72/9f/cf
+  Rxvt*color13:	rgb:da/77/eb
+  Rxvt*color14:	rgb:34/e2/e2
+  Rxvt*color15:	rgb:ee/ee/ec
+  Rxvt*color1:	rgb:cc/00/00
+  Rxvt*color2:	rgb:4e/9a/06
+  Rxvt*color3:	rgb:c4/a0/00
+  Rxvt*color4:	rgb:22/72/d9
+  Rxvt*color5:	rgb:a1/68/ab
+  Rxvt*color6:	rgb:06/98/9a
+  Rxvt*color7:	rgb:d3/d7/cf
+  Rxvt*color8:	rgb:55/57/53
+  Rxvt*color9:	rgb:ef/29/29
+
+  Rxvt*faceName:	IBM3161bitmap
+  Rxvt*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+  Rxvt*fontMenu*foreground: rgb:e9/ed/e5
+  Rxvt*foreground: rgb:e9/ed/e5
+  Rxvt*mainMenu*foreground: rgb:e9/ed/e5
+!   For Emacs meta key
+  Rxvt*metaSendsEscape: true
+  Rxvt*renderFont:	true
+  Rxvt*vtMenu*foreground: rgb:e9/ed/e5
+
+
+
+! URxvt
+!   Scroll bar on right side
+  URxvt*scrollBar_right: true
+!  URxvt*allowBoldFonts:	false
+  URxvt*background:	#2e3436
+  URxvt*boldFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-*-120-100-100-c-*-ISO10646-1, \
+                  -gnu-ibm3161bitmap-*-*-*-*-*-*-*-*-*-*-*-*, \
+                  xft:IBM 3161:antialias=false
+  URxvt*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-*-120-100-100-c-*-ISO10646-1, \
+                  -gnu-ibm3161bitmap-*-*-*-*-*-*-*-*-*-*-*-*, \
+                  xft:IBM 3161:antialias=false
+  URxvt*italicFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-*-120-100-100-c-*-ISO10646-1, \
+                  -gnu-ibm3161bitmap-*-*-*-*-*-*-*-*-*-*-*-*, \
+                  xft:IBM 3161:antialias=false
+  URxvt*boldItalicFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-*-120-100-100-c-*-ISO10646-1, \
+                  -gnu-ibm3161bitmap-*-*-*-*-*-*-*-*-*-*-*-*, \
+                  xft:IBM 3161:antialias=false
+
+  URxvt*boldMode: false
+
+!   COLORS
+!   black
+  URxvt*color0:	rgb:00/00/00
+  URxvt*color10:	rgb:8a/e2/34
+  URxvt*color11:	rgb:fc/e9/4f
+  URxvt*color12:	rgb:72/9f/cf
+  URxvt*color13:	rgb:da/77/eb
+  URxvt*color14:	rgb:34/e2/e2
+  URxvt*color15:	rgb:ee/ee/ec
+  URxvt*color1:	rgb:cc/00/00
+  URxvt*color2:	rgb:4e/9a/06
+  URxvt*color3:	rgb:c4/a0/00
+  URxvt*color4:	rgb:22/72/d9
+  URxvt*color5:	rgb:a1/68/ab
+  URxvt*color6:	rgb:06/98/9a
+  URxvt*color7:	rgb:d3/d7/cf
+  URxvt*color8:	rgb:55/57/53
+  URxvt*color9:	rgb:ef/29/29
+
+  URxvt*faceName:	IBM3161bitmap
+!   URxvt*font: -gnu-ibm3161bitmap-medium-r-normal-sans-16-160-75-75-c-80-iso10646-1
+
+!  URxvt*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-80-ISO10646-1
+!  URxvt*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-80-ISO10646-1, \
+!              xft:IBM 3161
+!  URxvt*imFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-80-ISO10646-1
+!  URxvt*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+!  URxvt*boldFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+!  URxvt*italicFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+!  URxvt*boldItalicFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+!  URxvt*imFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+
+
+
+  URxvt*fontMenu*foreground: rgb:e9/ed/e5
+  URxvt*foreground: rgb:e9/ed/e5
+  URxvt*mainMenu*foreground: rgb:e9/ed/e5
+!   For Emacs meta key
+  URxvt*metaSendsEscape: true
+!  URxvt*renderFont:	true
+  URxvt*vtMenu*foreground: rgb:e9/ed/e5
+	URxvt*renderFont: false
+
+! UXTerm
+  UXTerm.vt100.translations: #override \n\
+    Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
+  UXTerm*allowBoldFonts:	false
+  UXTerm*background:	#2e3436
+!  UXTerm*boldFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+  UXTerm*boldMode: false
+
+!   COLORS
+!   black
+  UXTerm*color0:	rgb:00/00/00
+  UXTerm*color10:	rgb:8a/e2/34
+  UXTerm*color11:	rgb:fc/e9/4f
+  UXTerm*color12:	rgb:72/9f/cf
+  UXTerm*color13:	rgb:da/77/eb
+  UXTerm*color14:	rgb:34/e2/e2
+  UXTerm*color15:	rgb:ee/ee/ec
+  UXTerm*color1:	rgb:cc/00/00
+  UXTerm*color2:	rgb:4e/9a/06
+  UXTerm*color3:	rgb:c4/a0/00
+  UXTerm*color4:	rgb:22/72/d9
+  UXTerm*color5:	rgb:a1/68/ab
+  UXTerm*color6:	rgb:06/98/9a
+  UXTerm*color7:	rgb:d3/d7/cf
+  UXTerm*color8:	rgb:55/57/53
+  UXTerm*color9:	rgb:ef/29/29
+!   For Emacs meta key
+!   UXTerm*eightBitInput: false
+!  UXTerm*font: -*-ibm3161bitmap-*-*-*-*-17-*-*-*-*-*-*-*
+  UXTerm*fontMenu*foreground: rgb:e9/ed/e5
+  UXTerm*foreground: rgb:e9/ed/e5
+  UXTerm*mainMenu*foreground: rgb:e9/ed/e5
+!   For Emacs meta key
+  UXTerm*metaSendsEscape: true
+  UXTerm*renderFont:	false
+  !  UXTerm*faceName:	IBM 3161 bitmap
+  UXTerm*font:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+  UXTerm*faceSize:      12
+  UXTerm*vtMenu*foreground: rgb:e9/ed/e5
+
+! XTerm
+! ctrl-shift-v and ctrl-shift-c copy/paste
+  XTerm.vt100.translations: #override \n\
+    Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
+  XTerm*allowBoldFonts:	false
+  XTerm*background:	#2e3436
+!  XTerm*boldFont:	-gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+  XTerm*boldMode: false
+
+!   COLORS
+!   black
+  XTerm*color0:	rgb:00/00/00
+  XTerm*color10:	rgb:8a/e2/34
+  XTerm*color11:	rgb:fc/e9/4f
+  XTerm*color12:	rgb:72/9f/cf
+  XTerm*color13:	rgb:da/77/eb
+  XTerm*color14:	rgb:34/e2/e2
+  XTerm*color15:	rgb:ee/ee/ec
+  XTerm*color1:	rgb:cc/00/00
+  XTerm*color2:	rgb:4e/9a/06
+  XTerm*color3:	rgb:c4/a0/00
+  XTerm*color4:	rgb:22/72/d9
+  XTerm*color5:	rgb:a1/68/ab
+  XTerm*color6:	rgb:06/98/9a
+  XTerm*color7:	rgb:d3/d7/cf
+  XTerm*color8:	rgb:55/57/53
+  XTerm*color9:	rgb:ef/29/29
+!   For Emacs meta key
+!   XTerm*eightBitInput: false
+  XTerm*faceName:	IBM3161bitmap
+  XTerm*font: -gnu-IBM3161bitmap-medium-R-normal-sans-*-120-100-100-c-*-ISO10646-1
+  XTerm*faceSize:      12
+  XTerm*fontMenu*foreground: rgb:e9/ed/e5
+  XTerm*foreground: rgb:e9/ed/e5
+  XTerm*mainMenu*foreground: rgb:e9/ed/e5
+!   For Emacs meta key
+  XTerm*metaSendsEscape: true
+  XTerm*renderFont:	false
+  
+  XTerm*vtMenu*foreground: rgb:e9/ed/e5
+  XTerm*iconHint: /home/wyatt/.icons/xterm_cde.xpm
+  UXTerm*iconHint: /home/wyatt/.icons/xterm_cde.xpm
+  XTerm.vt100.activeIcon: false
+  UXTerm.vt100.activeIcon: false
+
+! CDE stuff
+! Yeah, I have CDE on here.
+*DtTerm*Translations: #override \n\
+        Shift<Btn4Down>:        scroll(-5,page) \n\
+        Shift<Btn5Down>:        scroll(5,page) \n\
+        None<Btn4Down>:         scroll(-1,line) \n\
+        None<Btn5Down>:         scroll(1,line)
+*DtEditor.textTranslations: #override \n\
+        Shift<Btn4Down>:        previous-page() \n\
+        Shift<Btn5Down>:        next-page() \n\
+        None<Btn4Down>:        process-up()process-up()process-up()process-up()process-up() \n\
+        None<Btn5Down>:        process-down()process-down()process-down()process-down()process-down()
+*DtHelpDialog*textTranslations: #override \n\
+        <Btn4Down>:            PageUpOrDown(1)\n\
+        <Btn5Down>:            PageUpOrDown(0)
+*XmText.Translations:#override\n\
+        <Btn4Down>,<Btn4Up>: scroll-one-line-up()\n\
+        <Btn5Down>,<Btn5Up>: scroll-one-line-down()\n
+! Motif List Widget
+*XmList.Translations:#override\n\
+        <Btn4Down>,<Btn4Up>: ListPrevItem()\n\
+        <Btn5Down>,<Btn5Up>: ListNextItem()\n
+! Motif Scroll Bar
+*XmScrollBar.Translations:#override\n\
+        <Btn4Down>,<Btn4Up>: IncrementUpOrLeft(0)\n\
+        <Btn5Down>,<Btn5Up>: IncrementDownOrRight(0)\n
+
+! Number of screens to retain in scrollback in the terminal
+*DtTerm*saveLines: 10s
+
+! CDE dtwm window menus
+! not working for some reason.
+! Dtwm*windowMenu: DefaultWindowMenu
+
+*XTerm*scrollBar: true
+*XTerm*rightScrollBar: true
+*XTerm*saveLines: 4096
+
+*VT100.scrollbar.translations:  #override \n\
+              <Btn5Down>:     StartScroll(Forward) \n\
+              <Btn1Down>:     StartScroll(Continuous) MoveThumb() NotifyThumb() \n\
+              <Btn4Down>:     StartScroll(Backward) \n\
+              <Btn1Motion>:   MoveThumb() NotifyThumb() \n\
+              <BtnUp>:        NotifyScroll(Proportional) EndScroll()
+
+! *Font: -gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+
+! *Font: xft:IBM 3161:antialias=false
+*Font: -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+! xclock
+XClock*Font: -gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+xclock*Font: -gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
+xclock*Foreground: rgb:80/80/80
+! xclock*Background: rgb:b4/4c/7b
+! xclock*Background: rgb:4c/70/b4
+! xclock*Background: rgb:22/22/22
+xclock*Background: rgb:34/35/3b
+xclock*Height: 18
+! fvwm for window manager
+! Dtsession*wmStartupCommand: fvwm
+
+
+! Low-DPI mode:
+! Xft.dpi: 72
+Xft.dpi: 96
+
+xterm*font:   -gnu-IBM3161bitmap-medium-R-normal-sans-17-120-100-100-c-*-ISO10646-1
