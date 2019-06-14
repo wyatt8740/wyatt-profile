@@ -1,0 +1,42 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# my keymap:
+/usr/bin/loadkeys /usr/share/keymaps/i386/wyatt.kmap
+
+# blueman applet can re-enable bluetooth later, but I want it off at startup.
+# I don't use WWAN ever, so turn that off, too.
+# Note 1: My X201 tablet has a WWAN card, but my normal x201 does not.
+# Note 2: Anyone in the netdev group can unblock these.
+/usr/sbin/rfkill block bluetooth
+/usr/sbin/rfkill block wwan
+# x201 tablet padlock key
+# setkeycodes 66 141
+# seems to add 8, so I want to say 133 I guess
+#setkeycodes e017 149
+# i don't remember what I'm doing anymore, but this seems to work, so whatever.
+# (looking back ages later, I know this makes my tablet lock button work,
+# but I don't remember what I'm mapping it to. All I remember is that I can
+# pick up ACPI events from it now.)
+/usr/bin/setkeycodes e017 146
+
+
+# allow users to modify LED statuses (when using tpacpi configured to allow
+# modifying special LED's using my custom kernel)
+/usr/bin/find /sys/class/leds/*/trigger \
+              sys/class/leds/*/brightness \
+              /sys/class/leds/*/uevent \
+              -type f -print0 | /usr/bin/xargs -0 chmod 666
+true
+exit 0
+
