@@ -409,6 +409,7 @@ cd "$STARTDIR"
 set +x
 echo "Next up:"
 echo "Copying xorg.conf to /etc/X11/xorg.conf."
+echo "YOU REALLY MIGHT WANT TO COMMENT THIS PART OUT OF THE SCRIPT." 
 continueok
 set -x
 sudo mkdir -p /etc/X11
@@ -447,7 +448,8 @@ set +x
 echo "Next up:"
 echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
 echo "performs a few actions like setting up my keymap and turning off"
-echo "the bluetooth/WAN radios at boot."
+echo "the bluetooth/WAN radios at boot. It also sets up a couple buttons for"
+echo "my thinkpad 201 tablet."
 echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
 continueok
 set -x
