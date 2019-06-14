@@ -64,32 +64,45 @@ DestroyFunc UrgencyFunc
 # so using Test (Init) or Test (Restart) can further control
 # actions that are run during the first time run (Init) or
 # actions that are run after a restart.
+
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 #+ I Test (F $[FVWM_USERDIR]/.BGdefault) \
 + I Test (Init, f $[FVWM_USERDIR]/.BGdefault) \
-    Exec exec fvwm-root $[FVWM_USERDIR]/.BGdefault
-+ I TestRc (NoMatch) Exec exec fvwm-root \
+    Exec exec /usr/bin/env hsetroot -tile $[FVWM_USERDIR]/.BGdefault
++ I TestRc (NoMatch) Exec exec /usr/bin/env hsetroot -tile \
     $[FVWM_DATADIR]/default-config/images/background/bg1.png
-# + I Test (Init) Module FvwmBanner
-#+ I Module MwmButtons
-#+ I Module MwmButtons RightPanel
-#+ I Module FvwmButtons RightPanel
 + I Module FvwmEvent EventNewDesk
 + I Module FvwmCommandS
++ I Module FvwmButtons
++ I Exec exec /usr/bin/env hsetroot -tile $[FVWM_USERDIR]/.BGdefault
+
+# *FvwmButtons: (Title bright, Action (Mouse 1) `Exec exec /etc/acpi/actions/toggle-thinklight-or-tablet-lcd.sh` )
 
 # Start mcomix maximized
 DestroyModuleConfig FE-startMaximized: *
 *FE-startMaximized: Cmd Function
-*FE-startMaximized: add_window StartMcomixMaximized
+*FE-startMaximized: add_window StartMaximized
 
 Module FvwmEvent FE-startMaximized
 
-DestroyFunc StartMcomixMaximized
-AddToFunc   StartMcomixMaximized
+
+# start mcomix and seamonkey (only browser windows, or 'navigator' resources)
+# maximized.
+DestroyFunc StartMaximized
+AddToFunc   StartMaximized
 + I ThisWindow ("MComix", !Maximized) ToggleBordersMaximize
 + I ThisWindow ("MComix", Maximized) WindowStyle !Borders
-
++ I ThisWindow ("Navigator", !Maximized) ToggleBordersMaximize
++ I ThisWindow ("Navigator", Maximized) WindowStyle !Borders
++ I ThisWindow ("Glide64mk2") Maximize ewmhiwa
++ I ThisWindow ("Glide64mk2") WindowStyle !Title
++ I ThisWindow ("Glide64mk2") WindowStyle !Borders
++ I ThisWindow ("Krita") Maximize ewmhiwa
++ I ThisWindow ("Krita") WindowStyle !Title
++ I ThisWindow ("Krita") WindowStyle !Borders
++ I UpdateStyles
++ I RefreshWindow
 
 # Remove window borders when maximized (besides the titlebar)
 DestroyFunc ToggleBordersMaximize
@@ -100,11 +113,26 @@ AddToFunc ToggleBordersMaximize
 + I UpdateStyles
 + I RefreshWindow
 + I Maximize ewmhiwa
+
+DestroyFunc ThisToggleBordersMaximize
+AddToFunc ThisToggleBordersMaximize
+# + I Current (Maximized) BorderMax
++ I ThisWindow (Maximized) WindowStyle Borders
++ I TestRc (NoMatch) WindowStyle !Borders
++ I UpdateStyles
++ I RefreshWindow
++ I Maximize ewmhiwa
 # + I Current (Maximized) WindowStyle !Borders
+
 DestroyFunc ToggleBorders
 AddToFunc ToggleBorders
 + I Current (HasHandles) WindowStyle !Borders
 + I Current (!HasHandles) WindowStyle Borders
+
+DestroyFunc ThisToggleBorders
+AddToFunc ThisToggleBorders
++ I ThisWindow (HasHandles) WindowStyle !Borders
++ I ThisWindow (!HasHandles) WindowStyle Borders
 
 # Toggle 'full screen'
 DestroyFunc FullScreenMax
@@ -116,6 +144,16 @@ AddToFunc FullScreenMax
 + I UpdateStyles
 + I RefreshWindow
 + I Current (Maximizable) Maximize ewmhiwa
+
+DestroyFunc ThisFullScreenMax
+AddToFunc ThisFullScreenMax
++ I ThisWindow (Maximized) WindowStyle Borders
++ I TestRc (NoMatch) WindowStyle !Borders
++ I ThisWindow (Maximized) WindowStyle Title
++ I TestRc (NoMatch) WindowStyle !Title
++ I UpdateStyles
++ I RefreshWindow
++ I ThisWindow (Maximizable) Maximize ewmhiwa
 
 DestroyFunc UnMaxAddBorders
 AddToFunc UnMaxAddBorders
@@ -164,12 +202,13 @@ AddToFunc   ViewManPage
 DestroyFunc SetBG
 AddToFunc   SetBG
 + I Test (f $[FVWM_USERDIR]/images/background/$0) \
-    Exec exec fvwm-root $[FVWM_USERDIR]/images/background/$0
+    Exec exec hsetroot -tile $[FVWM_USERDIR]/images/background/$0
 + I TestRc (Match) Exec exec ln -fs images/background/$0 \
     $[FVWM_USERDIR]/.BGdefault
 + I TestRc (Match) Break
 + I Test (!f $[FVWM_DATADIR]/default-config/images/background/$0) Break
-+ I Exec exec fvwm-root $[FVWM_DATADIR]/default-config/images/background/$0
++ I Exec exec hsetroot -tile $[FVWM_DATADIR]/default-config/images/background/$0
+# + I Exec exec fvwm-root $[FVWM_DATADIR]/default-config/images/background/$0
 + I Exec exec ln -fs $[FVWM_DATADIR]/default-config/images/background/$0 \
     $[FVWM_USERDIR]/.BGdefault
 
@@ -278,12 +317,16 @@ Style * ClickToFocus, MouseFocusClickRaises
 
 # Wine needs this I think
 Style * Lenience
-Style * Leniency
+#Style * Leniency
 
 # Default Font
 #DefaultFont "xft:Sans:Bold:size=8:antialias=True"
 # previously, size 12 worked for some reason. Now I need 11. (shrug)
-DefaultFont "xft:IBM 3161:size=12:antialias=false"
+# DefaultFont "xft:IBM 3161:size=12:antialias=false"
+# tahoma
+DefaultFont "xft:Tahoma:size=8:antialias=false"
+WindowFont "xft:Tahoma:size=8:bold:antialias=false"
+Style WindowList 
 
 # Window Placement
 # I like grabbing focus
@@ -320,6 +363,11 @@ Style * BorderWidth 5, HandleWidth 5, MWMButtons, MwmBorder, MwmDecor, MwmFuncti
 #                 WindowListSkip, NeverFocus
 Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 Style FvwmIdent WindowListSkip
+
+
+Style FvwmButtons !Title, !Borders, !Handles, Sticky, \
+                 WindowListSkip, NeverFocus
+
 
 #######
 # 3: Colorsets
@@ -386,7 +434,10 @@ Colorset 16 fg #606060, bg #101010, hi, sh, Plain, NoShape
 #MenuStyle * TrianglesSolid, TrianglesUseFore
 #MenuStyle * ItemFormat "%|%3.1i%5.3l%5.3>%|"
 MenuStyle * Mwm
-MenuStyle * Font "xft:Sans:Bold:size=8:antialias=True"
+# MenuStyle * Font "xft:Sans:Bold:size=8:antialias=True"
+# tahoma
+MenuStyle * Font "xft:Microsoft Sans Serif:Regular:size=8:antialias=False"
+# MenuStyle * Font "-adobe-helvetica-medium-r-*-*-8-*-*-*-*-*-*-*"
 
 # Root Menu
 #
@@ -435,32 +486,104 @@ Test (x vlc) + "VLC" Exec exec vlc
 # Menu icons are located in ~/.fvwm/images/bgicons/
 ImagePath +:$HOME/.fvwm/images:$HOME/.fvwm/images/background
 
+DestroyMenu BGEV1280
+AddToMenu BGEV1280
++ "Black%bgicons/eeveelution/eeveelution_color_black.png%" SetBG "1280/eeveelution_black_1280.png"
++ "White%bgicons/eeveelution/eeveelution_color_white.png%" SetBG "1280/eeveelution_white_1280.png"
++ "Brick Red%bgicons/eeveelution/eeveelution_color_brick_red.png%" SetBG "1280/eeveelution_brick_red_1280.png"
++ "Brown%bgicons/eeveelution/eeveelution_color_brown.png%" SetBG "1280/eeveelution_brown_1280.png"
++ "Burgundy%bgicons/eeveelution/eeveelution_color_burgundy.png%" SetBG "1280/eeveelution_burgundy_1280.png"
++ "Deep Red%bgicons/eeveelution/eeveelution_color_deep_red.png%" SetBG "1280/eeveelution_deep_red_1280.png"
++ "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1280/eeveelution_gray_1280.png"
++ "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1280/eeveelution_indigo_1280.png"
++ "Lime%bgicons/eeveelution/eeveelution_color_lime.png%" SetBG "1280/eeveelution_lime_1280.png"
++ "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1280/eeveelution_rich-green_1280.png"
++ "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1280/eeveelution_purple_1280.png"
++ "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1280/eeveelution_sensible_blue_1280.png"
++ "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1280/eeveelution_teal_1280.png"
+
+DestroyMenu BGEV1440
+AddToMenu BGEV1440
++ "Black%bgicons/eeveelution/eeveelution_color_black.png%" SetBG "1440/eeveelution_black_1440.png"
++ "White%bgicons/eeveelution/eeveelution_color_white.png%" SetBG "1440/eeveelution_white_1440.png"
++ "Brick Red%bgicons/eeveelution/eeveelution_color_brick_red.png%" SetBG "1440/eeveelution_brick_red_1440.png"
++ "Brown%bgicons/eeveelution/eeveelution_color_brown.png%" SetBG "1440/eeveelution_brown_1440.png"
++ "Burgundy%bgicons/eeveelution/eeveelution_color_burgundy.png%" SetBG "1440/eeveelution_burgundy_1440.png"
++ "Deep Red%bgicons/eeveelution/eeveelution_color_deep_red.png%" SetBG "1440/eeveelution_deep_red_1440.png"
++ "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1440/eeveelution_gray_1440.png"
++ "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1440/eeveelution_indigo_1440.png"
++ "Lime%bgicons/eeveelution/eeveelution_color_lime.png%" SetBG "1440/eeveelution_lime_1440.png"
++ "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1440/eeveelution_rich-green_1440.png"
++ "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1440/eeveelution_purple_1440.png"
++ "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1440/eeveelution_sensible_blue_1440.png"
++ "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1440/eeveelution_teal_1440.png"
+
+DestroyMenu BGEV1920
+AddToMenu BGEV1920
++ "Black%bgicons/eeveelution/eeveelution_color_black.png%" SetBG "1920/eeveelution_black_1920.png"
++ "White%bgicons/eeveelution/eeveelution_color_white.png%" SetBG "1920/eeveelution_white_1920.png"
++ "Brick Red%bgicons/eeveelution/eeveelution_color_brick_red.png%" SetBG "1920/eeveelution_brick_red_1920.png"
++ "Brown%bgicons/eeveelution/eeveelution_color_brown.png%" SetBG "1920/eeveelution_brown_1920.png"
++ "Burgundy%bgicons/eeveelution/eeveelution_color_burgundy.png%" SetBG "1920/eeveelution_burgundy_1920.png"
++ "Deep Red%bgicons/eeveelution/eeveelution_color_deep_red.png%" SetBG "1920/eeveelution_deep_red_1920.png"
++ "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1920/eeveelution_gray_1920.png"
++ "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1920/eeveelution_indigo_1920.png"
++ "Lime%bgicons/eeveelution/eeveelution_color_lime.png%" SetBG "1920/eeveelution_lime_1920.png"
++ "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1920/eeveelution_rich-green_1920.png"
++ "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1920/eeveelution_purple_1920.png"
++ "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1920/eeveelution_sensible_blue_1920.png"
++ "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1920/eeveelution_teal_1920.png"
+
+DestroyMenu BGEVDual
+AddToMenu BGEVDual
++ "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "dual/eeveelution_teal_dualmonitor.png"
+
+DestroyMenu BG1280
+AddToMenu BG1280
++ "Eeveelution" Popup BGEV1280
++ "Bliss" SetBG "bliss1280x800.png"
+
+DestroyMenu BG1440
+AddToMenu BG1440
++ "Eeveelution" Popup BGEV1440
+
+DestroyMenu BG1920
+AddToMenu BG1920
++ "Eeveelution" Popup BGEV1920
++ "Bliss1200" SetBG bliss1920x1200.png
+
+DestroyMenu BGDual
+AddToMenu BGDual
++ "Eeveelution" Popup BGEVDual
++ "Bliss1550" SetBG bliss3200x1550.png
+
 DestroyMenu BGMenu
 AddToMenu   BGMenu "Wallpapers" Title
++ "1280%icons/wallpaper.png%" Popup BG1280
++ "1440%icons/wallpaper.png%" Popup BG1440
++ "1920%icons/wallpaper.png%" Popup BG1920
++ "Dual-Screen%icons/wallpaper.png%" Popup BGDual
 + "Paver%bgicons/paver.png%" SetBG paver.png
 + "Floral%bgicons/bg1.png%" SetBG bg1.png
 + "Circles%bgicons/bg2.png%" SetBG bg2.png
 + "Space%bgicons/bg3.png%" SetBG bg3.png
-+ "Bliss800" SetBG bliss1280x800.png
-+ "Bliss1200" SetBG bliss1920x1200.png
-+ "Bliss1550" SetBG bliss3200x1550.png
-+ "Eeveelution" SetBG eeveelution.png
-+ "Eeveelution - Teal" SetBG eeveelution_teal.png
 + "Solid Black%bgicons/black.png%" SetBG black.png
 
 # Window Operations Menus
 # + "Maximize"  Maximize ewmhiwa
 DestroyMenu MenuWindowOps
 AddToMenu   MenuWindowOps
-+ "Move"      Move
-+ "Resize"    Resize
-+ "Iconify"   Iconify
-+ "Maximize"  ToggleBordersMaximize
-+ "Shade"     WindowShade
-+ "Stick"     Stick
++ "Move"       Move
++ "Resize"     Resize
++ "Iconify"    Iconify
++ "Maximize"   ThisToggleBordersMaximize
++ "Fullscreen" ThisFullScreenMax
++ "Borders"    ThisToggleBorders
++ "Shade"      WindowShade
++ "Stick"      Stick
 + "" Nop
-+ "Close"     Close
-+ "More..."   Menu MenuWindowOpsLong This 0 0
++ "Close"      Close
++ "More..."    Menu MenuWindowOpsLong This 0 0
 
 #+ "(Un)Maximize"        Maximize ewmhiwa
 DestroyMenu MenuWindowOpsLong
@@ -468,7 +591,9 @@ AddToMenu   MenuWindowOpsLong
 + "Move"                Move
 + "Resize"              Resize
 + "(De)Iconify"         Iconify
-+ "(Un)Maximize"        ToggleBordersMaximize
++ "(Un)Maximize"        ThisToggleBordersMaximize
++ "(Un)Fullscreen"      ThisFullScreenMax
++ "(Un)Borderify"       ThisToggleBorders
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
 + "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
@@ -607,6 +732,13 @@ Silent Key F4 A C GotoDesk 0 3
 Silent Key Left A CM GotoDesk  -1 0 0 3
 Silent Key Right A CM GotoDesk +1 0 0 3
 
+# ctrl+alt+upArrow to bump brightness up
+Silent Key Up A CM Exec exec /home/wyatt/bin/brightup_acpi
+# ctrl+alt+downArrow to bump brightness down
+Silent Key Down A CM Exec exec /home/wyatt/bin/brightdown_acpi
+# ctrl+super+up and ctrl+super+down
+Silent Key Up A C4 Exec exec /home/wyatt/bin/brightup_acpi
+Silent Key Down A C4 Exec exec /home/wyatt/bin/brightdown_acpi
 # toggle LCD
 Silent Key XF86Launch1 A S Exec exec /home/wyatt/bin/toggle-lcd
 
@@ -617,8 +749,8 @@ Silent Key XF86Launch1 A M Exec exec /home/wyatt/bin/lcdon
 
 # fullscreen - hide window borders, hide title bar, and then maximize.
 # the same shortcut 'un-toggles' it.
-# ctrl-alt-f
-Silent Key f A CM FullScreenMax
+# ctrl-alt-g
+#Silent Key g A CM FullScreenMax
 # ctrl-alt-8
 Silent Key 8 A CM FullScreenMax
 
@@ -659,16 +791,16 @@ Silent Key b A CM ToggleBorders
 # Silent Key m A CM "Maximize ewmhiwa"
 # turn off borders:
 Silent Key m A CM "ToggleBordersMaximize"
-
+Silent Key n A CM "ToggleTitle"
 # run dialogue
 # Style fvwm-run-dialog GrabFocus
 # Silent Key F2 A A Exec exec $[HOME]/.fvwm/run-dialog
 Key F2          A       M       Module FvwmForm MyRun
 *MyRunWarpPointer
 *MyRunTitle "Run a command"
-*MyRunFont "xft:IBM 3161:size=12:antialias=false"
-*MyRunButtonFont "xft:IBM 3161:size=12:antialias=false"
-*MyRunInputFont "xft:IBM 3161:size=12:antialias=false"
+*MyRunFont "StringEncoding=UTF-8:xft:IBM 3161:size=12:antialias=false"
+*MyRunButtonFont "StringEncoding=UTF-8:xft:IBM 3161:size=12:antialias=false"
+*MyRunInputFont "StringEncoding=UTF-8:xft:IBM 3161:size=12:antialias=false"
 *MyRunFore Black
 *MyRunBack #AEB2C3
 *MyRunItemFore Black
@@ -799,7 +931,7 @@ ButtonStyle 6 - MwmDecorMin
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:Sans:size=10:antialias=True"
+*FvwmIdent: Font "StringEncoding=UTF-8:xft:Sans:size=10:antialias=True"
 
 # FvwmBanner
 #
@@ -828,6 +960,7 @@ DestroyModuleConfig FvwmScript:*
 # FvwmIconMan (list of running windows), and a clock.
 #
 # Note - To use the system tray you must have "stalonetray" installed.
+
 #DestroyModuleConfig RightPanel:*
 #*RightPanel: Geometry 120x$[vp.height]-0+0
 #*RightPanel: Colorset 10
@@ -869,7 +1002,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:Sans:Bold:size=8:antialias=True"
+*FvwmPager: BalloonFont "StringEncoding=UTF-8:xft:Sans:Bold:size=8:antialias=True"
 *FvwmPager: BallonYOffset +2
 *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -892,7 +1025,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Sans:Bold:size=8:antialias=True"
+*FvwmIconMan: Font "StringEncoding=UTF-8:xft:Sans:Bold:size=8:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
@@ -923,7 +1056,11 @@ Style * Colorset 1, HilightColorset 2
 # formerly colorset 1, hilightcolorset 15:
 Style MComix Colorset 15, HilightColorset 15
 Style touchnav Colorset 15, HilightColorset 15
+Style "Old School RuneScape" Colorset 15, HilightColorset 15
 Style touchnav !Title
+
+
+
 # No borders on the window
 Style touchnav !Borders
 # Keep on top (alt-shift-rightclick to get in the menu to turn off)
@@ -937,6 +1074,7 @@ Style * MwmFunctions, NoResizeHintOverride
 #Emulate Mwm
 TitleStyle Centered Height 22
 EwmhBaseStruts 0 0 0 0
+
 
 #Emu
 
@@ -952,5 +1090,11 @@ Style xvkbd Sticky
 Style Florence NeverFocus
 Style Florence StaysOnTop
 Style Florence Sticky
+Style TabletPC_Applet_Menu StaysOnTop
+Style TabletPC_Applet_Menu NeverFocus
+Style TabletPC_Applet_Menu Sticky
+# Remove iconify and maximize buttons from tabletPC applet
+Style TabletPC_Applet_Menu !Button 4, !Button 2
+Style TabletPC_Applet_Menu !Borders
 #Exec exec pkill xbindkeys
 # Exec xbindkeys
