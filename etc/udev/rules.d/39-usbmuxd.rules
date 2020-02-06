@@ -1,13 +1,14 @@
 # usbmuxd (Apple Mobile Device Muxer listening on /var/run/usbmuxd)
 
 # systemd should receive all events relating to device
-#SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", TAG+="systemd"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", TAG+="systemd"
 
 # Initialize iOS devices into "deactivated" USB configuration state and activate usbmuxd
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="add", ENV{USBMUX_SUPPORTED}="1", ATTR{bConfigurationValue}="0", OWNER="usbmux", GROUP="usbmux", MODE="0660", ENV{SYSTEMD_WANTS}="usbmuxd.service", RUN+="/sbin/usbmuxd"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="add", ENV{USBMUX_SUPPORTED}="1", ATTR{bConfigurationValue}="0", OWNER="usbmux", ENV{SYSTEMD_WANTS}="usbmuxd.service", RUN+="/bin/sh -c 'umask 002; /usr/sbin/usbmuxd -z'"
 
 # Make sure properties don't get lost when bind action is called
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="bind", ENV{USBMUX_SUPPORTED}="1", OWNER="usbmux", GROUP="usbmux", MODE="0660", ENV{SYSTEMD_WANTS}="usbmuxd.service"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="bind", ENV{USBMUX_SUPPORTED}="1", OWNER="usbmux", ENV{SYSTEMD_WANTS}="usbmuxd.service"
 
 # Exit usbmuxd when the last device is removed
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="remove", RUN+="/usr/sbin/usbmuxd -x"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="unbind", ENV{USBMUX_SUPPORTED}="1", OWNER="usbmux",  RUN+="/usr/sbin/usbmuxd -x"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="5ac/12[9a][0-9a-f]/*", ACTION=="remove", ENV{USBMUX_SUPPORTED}="1", OWNER="usbmux",  RUN+="/usr/sbin/usbmuxd -x"
