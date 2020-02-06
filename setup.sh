@@ -389,6 +389,16 @@ sudo sh -c 'tar -c -f - hwdb.d/ rules.d/ | tar -C /etc/udev -x -v -f - '
 sudo chown -R root:root /etc/udev
 sudo sh -c 'find /etc/udev/ -type f -print0 | xargs -0 chmod 644'
 sudo sh -c 'find /etc/udev/ -type d -print0 | xargs -0 chmod 755'
+sudo sh -c 'udevadm control --reload-rules; udevadm trigger'
+# we need to add usbmux user/group stuff, too (per 39-usbmuxd.rules), so let's
+# do that now.
+sudo sh -c 'mkdir -p /var/lib/usbmux'
+sudo sh -c 'useradd -d /var/lib/usbmux -s /bin/false -G plugdev,usb -M usbmux'
+# also usbmuxd lockdown directory permissions
+sudo sh -c 'mkdir -p /var/lib/lockdown; chown usbmux:usbmux /var/lib/lockdown'
+# setgid so that usbmuxd can trust and remember ios 7+ idevices between plugs.
+# (basically needs to be able to write to files)
+sudo sh -c 'chmod g+s /var/lib/lockdown'
 set +x
 cd "$STARTDIR/etc"
 echo "Next up:"
