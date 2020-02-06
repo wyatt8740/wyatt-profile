@@ -1,0 +1,67 @@
+#! /usr/bin/env ksh93
+# Shift filenames from DSKA $1 through the end by an increment of $2.
+# Made for facilitating sorting of Amiga floppy images
+# (on a FlashFloppy Gotek).
+
+if [[ "$#" -ne 2 ]]; then
+  echo "Wrong number of arguments given. Should be:"
+  echo "[starting disk number for shifting] [amount of shift]."
+  exit 2
+fi
+PREFIX='DSKA'
+
+getnum() {
+  echo "$1"|sed 's/^'"$PREFIX"'//;s/_.*$//'
+}
+
+getdesc() {
+  echo "$1"|sed 's/^'"$PREFIX"'//;s/^[0-9]*_//;s/\.adf$//'
+}
+
+INCREMENT="$2"
+echo "increment $INCREMENT"
+if [[ "$INCREMENT" -gt 0 ]]; then # incrementing upwards by n (right shift)
+  # we need to move the highest number first and work down
+  # ksh-specific: zero padding.
+  typeset -Z4 LOWESTNUM
+  LOWESTNUM=$1
+  typeset -Z4 DESTNUM
+  typeset -Z4 CURNUM
+  
+  # find largest filename.
+  # gnu sort and tail extensions used.
+  LARGESTNAME="$(find * -maxdepth 1 -type f -name "$PREFIX""*.adf" -print0 | sort -zV | tail -zn1 | tr '\0' '\n')"
+  CURNUM="$(getnum "$LARGESTNAME")"
+  CURDESC="$(getdesc "$LARGESTNAME")"
+# no need for overwrite test here since we find the largest file match and work down
+  while [[ "$CURNUM" -ge "$LOWESTNUM" ]]; do
+    DESTNUM="$(expr "$CURNUM" '+' "$INCREMENT")"
+    echo mv "$PREFIX""$CURNUM"'_'"$CURDESC"'.adf' "$PREFIX""$DESTNUM"'_'"$CURDESC"'.adf'
+    mv "$PREFIX""$CURNUM"'_'"$CURDESC"'.adf' "$PREFIX""$DESTNUM"'_'"$CURDESC"'.adf'
+    CURNUM="$(expr "$CURNUM" '-' '1')"
+    CURDESC="$(getdesc "$PREFIX""$CURNUM"'_'*'.adf')"
+  done
+elif [[ "$INCREMENT" -lt 0 ]]; then #incrementing downwards (left shift)
+  # we need to move the lowest number first and then work up
+  typeset -Z4 HIGHESTNUM
+  typeset -Z4 CURNUM
+  typeset -Z4 DESTNUM
+  CURNUM=$1
+  LARGESTNAME="$(find * -maxdepth 1 -type f -name "$PREFIX""*.adf" -print0 | sort -zV | tail -zn1 | tr '\0' '\n')"
+  HIGHESTNUM="$(getnum "$LARGESTNAME")"
+  CURDESC="$(getdesc "$PREFIX""$CURNUM"'_'*'.adf')"
+  DESTNUM="$(expr "$CURNUM" '+' "$INCREMENT")"
+  if [ -e "$PREFIX""$DESTNUM"'_'*'.adf' ]; then # don't overwrite existing!!! Single square brackets important
+    echo "Refusing to overwrite existing files. Exiting. (file ""$DESTNUM"' exists!)'
+    exit 1
+  fi
+  while [[ "$CURNUM" -le "$HIGHESTNUM" ]]; do
+    DESTNUM="$(expr "$CURNUM" '+' "$INCREMENT")" # same as with incrementing due to adding negatives
+    echo mv "$PREFIX""$CURNUM"'_'"$CURDESC"'.adf' "$PREFIX""$DESTNUM"'_'"$CURDESC"'.adf'
+    mv "$PREFIX""$CURNUM"'_'"$CURDESC"'.adf' "$PREFIX""$DESTNUM"'_'"$CURDESC"'.adf'
+    CURNUM="$(expr "$CURNUM" '+' '1')"
+    CURDESC="$(getdesc "$PREFIX""$CURNUM"'_'*'.adf')"
+  done
+else
+  echo "Shift was 0 or not specified, doing nothing."
+fi
