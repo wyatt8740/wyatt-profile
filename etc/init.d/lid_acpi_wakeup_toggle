@@ -1,0 +1,57 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: lid_acpi_wakeup_toggle
+# Should-Start: acpid
+# Required-Start: $local_fs
+# Required-Stop: 
+# Default-Start: 2 3 4 5 # hopefully this doesn't execute on each level
+# Default-Stop: 
+# Short-Description: start and stop the Emacs daemon
+### END INIT INFO
+
+# Wyatt Ward - Thinkpad should not wake up from sleep on lid opening.
+
+RETVAL=0
+
+lid_toggle() {
+    echo "Disabling the lid switch as a wakeup event."
+    if [ -e /proc/acpi/wakeup ]; then
+        grep ^LID /proc/acpi/wakeup | grep -q disabled
+        LID_WAKE_IS_DISABLED=$?
+        # check if already disabled (non-zero if disabled, 0 if enabled I guess)
+        if [ $LID_WAKE_IS_DISABLED -ne 0 ]; then
+            echo " LID" > /proc/acpi/wakeup
+        else
+            echo "Lid was already disabled. Doing nothing as Wyatt wants that."
+        fi
+    fi
+}
+
+case $1 in
+    start)
+        lid_toggle
+        ;;
+    stop)
+        echo "Use start to toggle the state of the lid."
+        ;;
+    force-reload)
+        lid_toggle
+        ;;
+    restart)
+        lid_toggle
+        ;;
+    status)
+        if [ -e /proc/acpi/wakeup ]; then
+            cat /proc/acpi/wakeup
+        fi
+        ;;
+    *)
+        echo "Usage: lid {start|stop|status}"
+        echo "Toggles whether the PC should wake from sleep when the lid is opened."
+        echo "status: Display status of enabled ACPI wake events."
+        echo "start:  Toggle the lid's state of enabled-ness on and off."
+        echo "stop:   Does nothing. This isn't really a daemon after all."
+        RETVAL=1
+        ;;
+esac
+exit $RETVAL

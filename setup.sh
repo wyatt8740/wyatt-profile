@@ -241,6 +241,9 @@ cd "$STARTDIR""/wyatt"
 tar -c -f - * .[A-Z]* .[0-9]* .[a-z]* | tar -C "$HOME" -x -v -f -
 cd "$HOME/"".config"
 ln -s "$HOME""/.fvwm/config" "fvwm"
+cd "$HOME"'/bin'
+echo 'Compiling '"$HOME"'/bin/escapify.c to '"$HOME"'/bin/escapify'
+gcc "$HOME"'/bin/escapify.c' -o "$HOME"'/bin/escapify'
 cd "$STARTDIR"
 set +x
 
@@ -415,6 +418,22 @@ sudo chown -R root:root /etc/polkit-1
 sudo sh -c 'find /etc/polkit-1/ -type f -print0 | xargs -0 chmod 644'
 sudo sh -c 'find /etc/polkit-1/ -type d -print0 | xargs -0 chmod 755'
 sudo chmod 700 /etc/polkit-1/localauthority
+cd "$STARTDIR"
+set +x
+echo "Next up:"
+echo "Copying custom init.d rules to /etc/init.d."
+continueok
+set -x
+cd "$STARTDIR""/etc"
+mkdir -p /etc/init.d
+sudo sh -c 'tar -c -f - init.d/ | tar -C /etc -x -v -f - '
+sudo chown -R root:root /etc/init.d
+set +x
+echo "Attempting to add new rule to sysv init scripts with update-rc.d."
+set -x
+for file in init.d/*; do
+  sudo update-rc.d "`basename $file`" defaults
+done
 cd "$STARTDIR"
 set +x
 echo "Next up:"
