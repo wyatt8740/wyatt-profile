@@ -6,7 +6,7 @@
 # Required-Stop: 
 # Default-Start: 2 3 4 5 # hopefully this doesn't execute on each level
 # Default-Stop: 
-# Short-Description: start and stop the Emacs daemon
+# Short-Description: Prevent laptop lid from waking computer
 ### END INIT INFO
 
 # Wyatt Ward - Thinkpad should not wake up from sleep on lid opening.
