@@ -1,6 +1,6 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides: lid_acpi_wakeup_toggle
+# Provides: lid_acpi_wakeup_disable
 # Should-Start: acpid
 # Required-Start: $local_fs
 # Required-Stop: 
@@ -13,7 +13,7 @@
 
 RETVAL=0
 
-lid_toggle() {
+lid_disable() {
     echo "Disabling the lid switch as a wakeup event."
     if [ -e /proc/acpi/wakeup ]; then
         grep ^LID /proc/acpi/wakeup | grep -q disabled
@@ -29,16 +29,16 @@ lid_toggle() {
 
 case $1 in
     start)
-        lid_toggle
+        lid_disable
         ;;
     stop)
-        echo "Use start to toggle the state of the lid."
+        echo "Use start to disable waking from lid open."
         ;;
     force-reload)
-        lid_toggle
+        lid_disable
         ;;
     restart)
-        lid_toggle
+        lid_disable
         ;;
     status)
         if [ -e /proc/acpi/wakeup ]; then
@@ -46,10 +46,10 @@ case $1 in
         fi
         ;;
     *)
-        echo "Usage: lid {start|stop|status}"
+        echo "Usage: lid_acpi_wakeup_disable {start|stop|status}"
         echo "Toggles whether the PC should wake from sleep when the lid is opened."
         echo "status: Display status of enabled ACPI wake events."
-        echo "start:  Toggle the lid's state of enabled-ness on and off."
+        echo "start:  Disable lid wakeup."
         echo "stop:   Does nothing. This isn't really a daemon after all."
         RETVAL=1
         ;;
