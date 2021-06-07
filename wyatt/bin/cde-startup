@@ -3,6 +3,12 @@
 # Used by FVWM startup (see bottom of ~/.fvwm2rc).
 # Could also be called from .dtprofile for CDE.
 
+# start compositor first, so applications that behave differently when started
+# with a compositor running work properly (meaning: mate-terminal transparency)
+if [ -z "$(ps aux | grep compton | grep -v grep)" ]; then
+  /home/wyatt/bin/compton & disown
+fi
+
 # contains tray and individual tray item initialization stuff
 # i.e. (volume icon, SCIM input manager, network-manager applet)
 /home/wyatt/bin/cde-tray
@@ -18,10 +24,11 @@ fi
 
 # preload wineserver to speed up wine app startup
 if [ -z "$(ps aux | grep wineserver | grep -v grep)" ]; then
-  wineserver -p & disown
+  /opt/wine-staging/bin/wineserver -p & disown
+#   wineserver -p & disown
 fi
 
-if [ -z "$(ps aux | grep wineserver | grep -v grep)" ]; then
+if [ -z "$(ps aux | grep xbindkeys | grep -v grep)" ]; then
   /usr/bin/xbindkeys & disown
 fi
 
