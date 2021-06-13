@@ -1,0 +1,62 @@
+#! /bin/sh
+# Adjust color temperature to n degrees kelvin whitepoint using redshift.
+PROGNAME="$(echo "$0" | sed 's!.*/!!')"
+
+GAMMA='1:1:1'
+COLORTEMP='6500'
+BRIGHT='1.0:1.0'
+if [ "$DISPLAY" ]; then
+  DRIVERMODE='randr'
+else
+  DRIVERMODE='drm'
+fi
+helpmsg() {
+  echo 'Usage:'
+  echo "$PROGNAME"' [-g gamma_point] [color_temperature]'
+  echo 'Options:'
+  echo '  -b brightness  - Software brightness adjustment. Default: 1.0.'
+  echo '  -g gamma_point - Gamma point to set to. Default: 1.0.'
+  echo "  -m mode        - what method to use to apply settings. Default: '""$DRIVERMODE""'."
+  echo "                   Valid methods: 'drm', 'randr', 'vidmode', and 'dummy'."
+  echo '                   The default mode will vary depending on if the $DISPLAY'
+  echo '                   variable is set.'
+}
+
+# technically this will become 0 when no
+#more args are left if no color temp is given (reset to 6500)
+while [ "$#" -gt 0 ]; do 
+  case "$1" in
+    '-h'|'--help')
+      helpmsg
+      exit 0
+      ;;
+    [0-9]*)
+      COLORTEMP="$1"
+      ;;
+    '-g')
+      GAMMA="$2"':'"$2"':'"$2"
+      shift 1
+      ;;
+    '-b')
+      BRIGHT="$2"':'"$2"
+      shift 1
+      ;;
+    '-m')
+      DRIVERMODE="$2"
+      shift 1
+      ;;
+  esac
+  shift 1
+done
+
+#if [ "$#" -gt 0 ]; then
+#  1>&2 echo "Error: I want only one argument: the white point in degrees kelvin."
+#  1>&2 helpmsg
+#  exit 1
+#fi
+#if [ "$GAMMA" = '1:1:1' ]; then
+  #1>&2 echo "No args given, resetting color temperature/gamma to 6500/1.0."
+  #redshift -x -P -O "$COLORTEMP" -g 1:1:1
+#else
+redshift -x -P -O "$COLORTEMP" -g "$GAMMA" -b "$BRIGHT" -m "$DRIVERMODE"
+#fi

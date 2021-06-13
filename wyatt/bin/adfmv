@@ -1,0 +1,30 @@
+#! /usr/bin/env ksh93
+# quickly move adf based on flashfloppy file numbers, preserving names
+# otherwise
+# (on a FlashFloppy Gotek).
+
+PREFIX='DSKA'
+typeset -Z4 SRCNUM
+SRCNUM="$1"
+typeset -Z4 DSTNUM
+DSTNUM="$2"
+
+getname() { # get source name from number
+  echo "$PREFIX""$1"*'.adf'
+}
+
+getdesc() {
+  echo "$1"|sed 's/^'"$PREFIX"'//;s/^[0-9]*_//;s/\.adf$//'
+}
+
+SRCNAME="$(getname "$SRCNUM")"
+DSTDESC="$(getdesc "$SRCNAME")"
+DSTNAME="$PREFIX""$DSTNUM"'_'"$DSTDESC"'.adf'
+
+if [ -e "$PREFIX""$DSTNUM"*'.adf' ]; then
+  echo 'Cannot do the move; a file with number '"$DSTNUM"' already exists!' 1>&2
+  echo '('"$(ls "$PREFIX""$DSTNUM"*.adf)"')' 1>&2
+  exit 1
+fi
+echo "$SRCNAME"' --> '"$DSTNAME"
+mv "$SRCNAME" "$DSTNAME"

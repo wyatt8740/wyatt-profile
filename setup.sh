@@ -241,6 +241,9 @@ cd "$STARTDIR""/wyatt"
 tar -c -f - * .[A-Z]* .[0-9]* .[a-z]* | tar -C "$HOME" -x -v -f -
 cd "$HOME/"".config"
 ln -s "$HOME""/.fvwm/config" "fvwm"
+cd "$HOME"'/bin'
+echo 'Compiling '"$HOME"'/bin/escapify.c to '"$HOME"'/bin/escapify'
+gcc "$HOME"'/bin/escapify.c' -o "$HOME"'/bin/escapify'
 cd "$STARTDIR"
 set +x
 
@@ -389,6 +392,16 @@ sudo sh -c 'tar -c -f - hwdb.d/ rules.d/ | tar -C /etc/udev -x -v -f - '
 sudo chown -R root:root /etc/udev
 sudo sh -c 'find /etc/udev/ -type f -print0 | xargs -0 chmod 644'
 sudo sh -c 'find /etc/udev/ -type d -print0 | xargs -0 chmod 755'
+sudo sh -c 'udevadm control --reload-rules; udevadm trigger'
+# we need to add usbmux user/group stuff, too (per 39-usbmuxd.rules), so let's
+# do that now.
+sudo sh -c 'mkdir -p /var/lib/usbmux'
+sudo sh -c 'useradd -d /var/lib/usbmux -s /bin/false -G plugdev,usb -M usbmux'
+# also usbmuxd lockdown directory permissions
+sudo sh -c 'mkdir -p /var/lib/lockdown; chown usbmux:usbmux /var/lib/lockdown'
+# setgid so that usbmuxd can trust and remember ios 7+ idevices between plugs.
+# (basically needs to be able to write to files)
+sudo sh -c 'chmod g+s /var/lib/lockdown'
 set +x
 cd "$STARTDIR/etc"
 echo "Next up:"
@@ -408,7 +421,24 @@ sudo chmod 700 /etc/polkit-1/localauthority
 cd "$STARTDIR"
 set +x
 echo "Next up:"
+echo "Copying custom init.d rules to /etc/init.d."
+continueok
+set -x
+cd "$STARTDIR""/etc"
+mkdir -p /etc/init.d
+sudo sh -c 'tar -c -f - init.d/ | tar -C /etc -x -v -f - '
+sudo chown -R root:root /etc/init.d
+set +x
+echo "Attempting to add new rule to sysv init scripts with update-rc.d."
+set -x
+for file in init.d/*; do
+  sudo update-rc.d "`basename $file`" defaults
+done
+cd "$STARTDIR"
+set +x
+echo "Next up:"
 echo "Copying xorg.conf to /etc/X11/xorg.conf."
+echo "YOU REALLY MIGHT WANT TO COMMENT THIS PART OUT OF THE SCRIPT." 
 continueok
 set -x
 sudo mkdir -p /etc/X11
@@ -444,13 +474,15 @@ continueok
 set -x
 sudo kill -SIGHUP `pidof acpid`
 set +x
-#echo "Next up:"
-#echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
-#echo "performs a few actions like setting up my keymap and turning off"
-#echo "the bluetooth/WAN radios at boot."
-#echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
-#continueok
-#set -x
-#sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
+echo "Next up:"
+echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
+echo "performs a few actions like setting up my keymap and turning off"
+echo "the bluetooth/WAN radios at boot. It also sets up a couple buttons for"
+echo "my thinkpad 201 tablet."
+echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
+continueok
+set -x
+sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
+>>>>>>> e86cf86eeea722a4efc3318bc285453b5fb5798b
 set +x
 echo "Reached end of setup script! Exiting."
