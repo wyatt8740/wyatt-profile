@@ -483,6 +483,5 @@ echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
 continueok
 set -x
 sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
->>>>>>> e86cf86eeea722a4efc3318bc285453b5fb5798b
 set +x
 echo "Reached end of setup script! Exiting."
