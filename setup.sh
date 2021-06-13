@@ -474,13 +474,14 @@ continueok
 set -x
 sudo kill -SIGHUP `pidof acpid`
 set +x
-#echo "Next up:"
-#echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
-#echo "performs a few actions like setting up my keymap and turning off"
-#echo "the bluetooth/WAN radios at boot."
-#echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
-#continueok
-#set -x
-#sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
+echo "Next up:"
+echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
+echo "performs a few actions like setting up my keymap and turning off"
+echo "the bluetooth/WAN radios at boot. It also sets up a couple buttons for"
+echo "my thinkpad 201 tablet."
+echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
+continueok
+set -x
+sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
 set +x
 echo "Reached end of setup script! Exiting."
