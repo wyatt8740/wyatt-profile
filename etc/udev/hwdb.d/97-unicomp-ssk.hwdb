@@ -1,0 +1,26 @@
+# see /usr/lib/udev/hwdb.d/60-keyboard.hwdb for more details
+# Unicomp mini M (tenkeyless) key remapping
+
+# showkey says keycode 126 is right alt (although unicomp decided to make it
+# right windows key instead, so we'll fix it here).
+# meanwhile, the key being hidden under my longer spacebar is keycode 100 in
+# showkey. So swap 100 and 126.
+
+# evdev:input:b<bus_id>v<vendor_id>p<product_id>e<version_id>-<modalias>
+# evdev:input:b0003v17f6p1862e0111-<modalias>
+# find /sys -name *modalias | xargs grep -i 17f6
+# input:b0003v17F6p1862e0111-e0,1,4,11,14,k77,7D,7E,7F,ram4,l0,1,2,3,4,sfw
+# evdev:input:b0003v17F6p1862e0111-e0,1,4,11,14,k77,7D,7E,7F,ram4,l0,1,2,3,4,sfw
+
+# unicomp modalias for my tenkeyless ssk
+# Unicomp Inc U AP1_4_87k_Kbrd_v7_56
+# evdev:input:b0003v17F6p1862*
+
+# scancode 0xe0 0x5c defaults to 126 (0xe0 0xdc on keyup) - evtest says 700e6
+# scancode 0xe0 0x38 defaults to 100 (0xe0 0xb8 on keyup) - evtest says 700e7
+
+evdev:input:b0003v17F6p1862*
+ KEYBOARD_KEY_700e6=rightmeta
+ KEYBOARD_KEY_700e7=rightalt
+
+# Note: Alternatively, I can disable a key with the 'reserved' keyword
