@@ -373,28 +373,35 @@ bl24_dn()
   fi
 }
 
-case "$1" in
-  up)
-    if [ "$2" ]; then
-      bl24_up "$2"
-    else
-      bl24_up 1
-    fi
-    ;;
-  down | dn)
-    if [ "$2" ]; then
-      bl24_dn "$2"
-    else
-      bl24_dn 1
-    fi
-    ;;
-  *)
-    if [ "$1" -lt 101 ] && [ "$1" -ge 0 ]; then
-      LEVEL="$(U2412M_bright "$1")"
-      echo "$1"' -> '"$LEVEL"
-      echo "$LEVEL" > "$SYSFSPATH"'/brightness'
-    else
-      1>&2 echo "Err: please enter 'up,' 'down,' or a value between 1 and 100."
-    fi
-    ;;
-esac
+if [ "$#" -eq 0 ]; then
+  get_current
+else
+  case "$1" in
+    get)
+      get_current
+      ;;
+    up)
+      if [ "$2" ]; then
+        bl24_up "$2"
+      else
+        bl24_up 1
+      fi
+      ;;
+    down | dn)
+      if [ "$2" ]; then
+        bl24_dn "$2"
+      else
+        bl24_dn 1
+      fi
+      ;;
+    *)
+      if [ "$1" -lt 101 ] && [ "$1" -ge 0 ]; then
+        LEVEL="$(U2412M_bright "$1")"
+        echo "$1"' -> '"$LEVEL"
+        echo "$LEVEL" > "$SYSFSPATH"'/brightness'
+      else
+        1>&2 echo "Err: please enter 'up,' 'down,' or a value between 1 and 100."
+      fi
+      ;;
+  esac
+fi
