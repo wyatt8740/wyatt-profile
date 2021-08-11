@@ -1,0 +1,290 @@
+#! /bin/sh
+
+# This script calculates and prints a brightness level suitable for writing
+# to /sys/class/backlight/intel_backlight/brightness on a Thinkpad X201 tablet
+# with 300nit screen (NOT the "daylight" 400nit one), corresponding to a
+# given cd/m² (candela per square meter) value.
+
+# It depends on `dc`, but other than that should be a totally POSIX compliant
+# shell script. I chose `dc` for my calculator instead of `bc` mainly because
+# I find it more fun/interesting, and because I like reverse polish notation.
+
+table_get() {
+  # this table was calculated from measurements taken with an X-Rite
+  # i1Display Pro borrowed from a friend.
+  # Here are the raw data I recorded from my display. Note that
+  # these measurements are pretty rough, and I don't remember how long I
+  # let the display warm up.
+
+  # Conversion table: x201 tablet intel_backlight brightness -> sysfs numbers, u2412m brightness numbers, cd/m²
+  # BRIGHTNESS -> cd/m²:                                    
+  # [   ACPI   ]    [intel_backlight]
+  # [  (sysfs) ]    [    (sysfs)    ]    cd/m²    [igpu-tools]   
+  # 0               0                    5.69     1.96
+  # 1               76                   11.69    3.92
+  # 2               122                  15.19    5.09
+  # 3               168                  18.71    6.27
+  # 4               199                  21.09    7.05
+  # 5               260                  25.83    8.62
+  # 6               321                  30.54    10.19
+  #                 344                  32       10.76    ; U2412M lv. 0
+  # 7               382                  35.24    11.76
+  #                 447                  40                ; U2412M lv. 3
+  # 8               474                  42.44    14.11
+  #                 565                  49                ; U2412M lv. 6
+  #                 577                  50    
+  # 9               613                  52.92    17.66
+  #                 708                  60                ; U2412M lv. 10
+  # 10              766                  64.63    21.58
+  #                 833                  69                ; U2412M lv. 13
+  #                 840                  70
+  #                 973                  80                ; U2412M lv. 17
+  # 11              980                  81.18    27.06
+  #                 1100                 89                ; U2412M lv. 20
+  #                 1117                 90.8              ; U2412M lv. 21
+  #                 1259                 101               ; U2412M lv. 24
+  # 12              1317                 106.55   35.68
+  #                 1365                 109               ; U2412M lv. 27
+  #                 1509                 120               ; U2412M lv. 31
+  #                 1656                 131               ; U2412M lv. 35
+  # 13              1776                 140.85   47.44    ; U2412M lv. 38
+  #                 1779                 141            
+  #                 1914                 150               ; U2412M lv. 41
+  #                 2050                 160               ; U2412M lv. 45
+  #                 2188                 170               ; U2412M lv. 49
+  #                 2343                 181               ; U2412M lv. 53
+  #                 2452                 189               ; U2412M lv. 56
+  # 14              2557                 198.75    67.45
+  #                 2608                 200               ; U2412M lv. 60
+  #                 2746                 210               ; U2412M lv. 64
+  #                 2887                 220               ; U2412M lv. 68
+  #                 3014                 229               ; U2412M lv. 71
+  #                 3170                 240               ; U2412M lv. 75
+  #                 3313                 250               ; U2412M lv. 79
+  #                 3457                 260               ; U2412M lv. 83
+  #                 3607                 270               ; U2412M lv. 87
+  #                 3764                 281               ; U2412M lv. 91
+  # 15              3828                 289.40    100.00  ; U2412M lv. 95
+
+  # From the above table, i calculated very rough derivatives for intervals
+  # between every recorded sysfs level and measured brightness using the
+  # following comand (after isolating the sysfs and cd/m² columns in a file):
+  #
+  # ITER=0; tail -n +1 bright_curve_tab.txt | while read line; do
+  #   X1="$(echo "$line" | awk '{ print $1 '})"
+  #   Y1="$(echo "$line" | awk '{ print $2 '})"
+  #   ITER="$(expr "$ITER" '+' 1)"
+  #   TAILVAL="$(expr "$ITER" '+' 1)"
+  #   LINE2="$(tail -n '+'"$TAILVAL" bright_curve_tab.txt | head -n 1 )"
+  #   X2="$(echo "$LINE2" | awk '{ print $1 }')"
+  #   Y2="$(echo "$LINE2" | awk '{ print $2 }')"
+  #   printf "$X2"' '
+  #   echo '10 k '"$Y2"' '"$Y1"' - '"$X2"' '"$X1"'-/p'|dc
+  # done
+  #
+  # The graph is hiliarious, so I may not have done the greatest job. Oh well.
+  # At least the intervals never have a negative slope.
+  # One anomaly for instance is at sysfs level 2608. If anyone else can
+  # measure I'd love to see what you get.
+  # I wonder if PWM was messing up the colorimeter?
+  #
+
+  # I did not smooth out my measurements, but go ahead and try it if you
+  # want. The data below are processed whenever a calculation is to be made.
+  # If this were integration, it'd be the kind where you measure on the
+  # far edge of your rectangles.
+  
+(cat <<EOF
+76 .0789473684
+122 .0760869565
+168 .0765217391
+199 .0767741935
+260 .0777049180
+321 .0772131147
+344 .0634782608
+382 .0852631578
+447 .0732307692
+474 .0903703703
+565 .0720879120
+577 .0833333333
+613 .0811111111
+708 .0745263157
+766 .0798275862
+833 .0652238805
+840 .1428571428
+973 .0751879699
+980 .1685714285
+1100 .0651666666
+1117 .1058823529
+1259 .0718309859
+1317 .0956896551
+1365 .0510416666
+1509 .0763888888
+1656 .0748299319
+1776 .0820833333
+1779 .0500000000
+1914 .0666666666
+2050 .0735294117
+2188 .0724637681
+2343 .0709677419
+2452 .0733944954
+2557 .0928571428
+2608 .0245098039
+2746 .0724637681
+2887 .0709219858
+3014 .0708661417
+3170 .0705128205
+3313 .0699300699
+3457 .0694444444
+3607 .0666666666
+3764 .0700636942
+3828 .1312500000
+EOF
+)
+}
+
+equal() {
+  # decimal less than comparison using dc
+  # find which has more 
+  PLACES1="$(echo '10k'"$1"'Xp'|dc)"
+  PLACES2="$(echo '10k'"$2"'Xp'|dc)"
+  if [ "$PLACES2" -gt "$PLACES1" ]; then
+    PLACES="$PLACES2"
+  else
+    PLACES="$PLACES1"
+  fi
+  if [ "$PLACES" -eq 0 ]; then
+    # yes, this isn't the right way to do anything
+    # resembling floating point comparisons. Hopefully it'll be fine.
+    test "$1" -eq "$2"
+    return $?
+  else
+    CMP1="$(echo '10k'"$1"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    CMP2="$(echo '10k'"$2"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    # yes, this isn't the right way to do anything
+    # resembling floating point comparisons. Hopefully it'll be fine.
+    test "$CMP1" -eq "$CMP2"
+    return $?
+  fi
+}
+
+lessequal() {
+  # decimal less than comparison using dc
+  # find which has more 
+  PLACES1="$(echo '10k'"$1"'Xp'|dc)"
+  PLACES2="$(echo '10k'"$2"'Xp'|dc)"
+  if [ "$PLACES2" -gt "$PLACES1" ]; then
+    PLACES="$PLACES2"
+  else
+    PLACES="$PLACES1"
+  fi
+  if [ "$PLACES1" -eq 0 ]; then
+    test "$1" -le "$2"
+    return $?
+  else
+    CMP1="$(echo '10k'"$1"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    CMP2="$(echo '10k'"$2"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    test "$CMP1" -le "$CMP2"
+    return $?
+  fi
+}
+
+lessthan() {
+  # decimal less than comparison using dc
+  # find which has more 
+  PLACES1="$(echo '10k'"$1"'Xp'|dc)"
+  PLACES2="$(echo '10k'"$2"'Xp'|dc)"
+  if [ "$PLACES2" -gt "$PLACES1" ]; then
+    PLACES="$PLACES2"
+  else
+    PLACES="$PLACES1"
+  fi
+  if [ "$PLACES" -eq 0 ]; then
+    test "$1" -lt "$2"
+    return $?
+  else
+    CMP1="$(echo '10k'"$1"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    CMP2="$(echo '10k'"$2"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    test "$CMP1" -lt "$CMP2"
+    return $?
+  fi
+}
+
+greaterthan() {
+  # decimal greater or equal to comparison using dc
+  # find which has more 
+  PLACES1="$(echo '10k'"$1"'Xp'|dc)"
+  PLACES2="$(echo '10k'"$2"'Xp'|dc)"
+  if [ "$PLACES2" -gt "$PLACES1" ]; then
+    PLACES="$PLACES2"
+  else
+    PLACES="$PLACES1"
+  fi
+  if [ "$PLACES" -eq 0 ]; then
+    test "$1" -gt "$2"
+    return $?
+  else
+    CMP1="$(echo '10k'"$1"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    CMP2="$(echo '10k'"$2"' 10 '"$PLACES"'^*0k1/p'|dc)"
+    test "$CMP1" -gt "$CMP2"
+    return $?
+  fi
+}
+
+getcol()
+{
+  awk '{ print $'"$1"' }'
+}
+
+# definitions
+XMIN=0 # minimum sysfs value to apply a given slope for
+XMAX=0 # maximum sysfs value to apply a given slope for
+OFFSET=5.69
+MAXBRIGHTNESS=3828 # from /sys/class/backlight/intel_backlight/max_brightness on my machine. Might be different on yours.
+
+calcslope() {
+  XMIN=0 # minimum sysfs value to apply a given slope for
+  XMAX=0 # maximum sysfs value to apply a given slope for.
+  OFFSET=5.69
+  WANT="$1"
+  if lessthan "$WANT" "$OFFSET"; then
+    WANT="$OFFSET"
+  fi
+  table_get | while read line; do
+    XMIN="$XMAX" # maximum from last run is now minimum
+    XMAX="$(echo "$line" | getcol 1)"
+    if greaterthan "$WANT" "$XMIN" && lessequal "$WANT" "$XMAX"; then
+      echo "$line" | getcol 2
+      return 0
+    fi
+  done
+#   1>&2 echo "E: brightness value appears to be out of range. Setting to max."
+}
+
+
+getbrightval()
+{
+  # if we've supplied the minimum value, things are easy:
+  if equal "$1" "$OFFSET"; then
+    echo '0' # minimum step possible is Y offset
+    exit 0
+  else
+    SLOPE="$(calcslope "$@")"
+    if [ "$?" -eq 0 ]; then
+      # brightness = (slope) * sysfs_value + offset
+      # sysfs_value(x) = ( brightness(y) - offset ) / (slope)
+      # ...and then change precision back to no decimal places
+      # RESULT="$(echo '10k'"$1"' '"$OFFSET"'-'"$SLOPE"'/0k1/p'|dc)"
+      # this ugly bit at the end (`[_1*]sad.5r0>a+0k1/`) is for rounding to nearest
+      RESULT="$(echo '10k'"$1"' '"$OFFSET"'-'"$SLOPE"'/[_1*]sad.5r0>a+0k1/p'|dc)"
+      if [ "$RESULT" -gt "$MAXBRIGHTNESS" ]; then
+        1>&2 echo 'E: brightness value ('"$RESULT"') appears to be out of range ('"$MAXBRIGHTNESS"'). Clamping to max.'
+        RESULT="$MAXBRIGHTNESS"
+      fi
+      echo "$RESULT"
+    fi
+  fi
+}
+RESULT="$(getbrightval "$1")"
+echo "$RESULT"
+echo "$RESULT" > /sys/class/backlight/intel_backlight/brightness
