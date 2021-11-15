@@ -58,5 +58,9 @@ done
   #1>&2 echo "No args given, resetting color temperature/gamma to 6500/1.0."
   #redshift -x -P -O "$COLORTEMP" -g 1:1:1
 #else
-redshift -x -P -O "$COLORTEMP" -g "$GAMMA" -b "$BRIGHT" -m "$DRIVERMODE"
+#redshift -x -P -O "$COLORTEMP" -g "$GAMMA" -b "$BRIGHT" -m "$DRIVERMODE"
+# caliblcd
+srgb
+redshift -O "$COLORTEMP" -g "$GAMMA" -b "$BRIGHT" -m "$DRIVERMODE"
+#redshift -x -P -O "$COLORTEMP" -g "$GAMMA" -b "$BRIGHT" -m "$DRIVERMODE"
 #fi
