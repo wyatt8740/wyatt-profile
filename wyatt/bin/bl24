@@ -1,0 +1,407 @@
+#! /bin/sh
+# this script sets the internal backlight brightness on my Thinkpad to
+# brightness levels equivalent to those on the OSD of my Dell U2412M.
+# It is only accurate on about a third of all possible values (those which
+# I measured), but should
+# be close enough realistically on the intermediary values as well
+# since its control follows a mostly linear relationship to cd/m².
+
+SYSFSPATH="/sys/class/backlight/intel_backlight"
+
+bl_alert()
+{
+  1>&2 echo 'Warning: thinkpad panel brightness maxes out at level 95 on U2412M. Setting to maximum. (95).' 
+}
+
+# A giant lookup table for every integer between 0 and 100 (101 values):
+U2412M_bright(){
+  case "$1" in
+    0)
+      echo 344
+      ;;
+    1)
+      echo 370
+      ;;
+    2)
+      echo 396
+      ;;
+    3)
+      echo 421
+      ;;
+    3)
+      echo 447
+      ;;
+    4)
+      echo 486
+      ;;
+    5)
+      echo 526
+      ;;
+    6)
+      echo 565
+      ;;
+    7)
+      echo 601
+      ;;
+    8)
+      echo 637
+      ;;
+    9)
+      echo 672
+      ;;
+    10)
+      echo 708
+      ;;
+    11)
+      echo 750
+      ;;
+    12)
+      echo 791
+      ;;
+    13)
+      echo 833
+      ;;
+    14)
+      echo 868
+      ;;
+    15)
+      echo 903
+      ;;
+    16)
+      echo 938
+      ;;
+    17)
+      echo 973
+      ;;
+    18)
+      echo 1015
+      ;;
+    19)
+      echo 1058
+      ;;
+    20)
+      echo 1100
+      ;;
+    21)
+      echo 1140
+      ;;
+    22)
+      echo 1180
+      ;;
+    23)
+      echo 1219
+      ;;
+    24)
+      echo 1259
+      ;;
+    25)
+      echo 1294
+      ;;
+    26)
+      echo 1330
+      ;;
+    27)
+      echo 1365
+      ;;
+    28)
+      echo 1401
+      ;;
+    29)
+      echo 1437
+      ;;
+    30)
+      echo 1473
+      ;;
+    31)
+      echo 1509
+      ;;
+    32)
+      echo 1546
+      ;;
+    33)
+      echo 1583
+      ;;
+    34)
+      echo 1619
+      ;;
+    35)
+      echo 1656
+      ;;
+    36)
+      echo 1696
+      ;;
+    37)
+      echo 1736
+      ;;
+    38)
+      echo 1776
+      ;;
+    39)
+      echo 1822
+      ;;
+    40)
+      echo 1868
+      ;;
+    41)
+      echo 1914
+      ;;
+    42)
+      echo 1948
+      ;;
+    43)
+      echo 1982
+      ;;
+    44)
+      echo 2016
+      ;;
+    45)
+      echo 2050
+      ;;
+    46)
+      echo 2085
+      ;;
+    47)
+      echo 2119
+      ;;
+    48)
+      echo 2154
+      ;;
+    49)
+      echo 2188
+      ;;
+    50)
+      echo 2227
+      ;;
+    51)
+      echo 2266
+      ;;
+    52)
+      echo 2304
+      ;;
+    53)
+      echo 2343
+      ;;
+    54)
+      echo 2379
+      ;;
+    55)
+      echo 2416
+      ;;
+    56)
+      echo 2452
+      ;;
+    57)
+      echo 2491
+      ;;
+    58)
+      echo 2530
+      ;;
+    59)
+      echo 2569
+      ;;
+    60)
+      echo 2608
+      ;;
+    61)
+      echo 2643
+      ;;
+    62)
+      echo 2677
+      ;;
+    63)
+      echo 2712
+      ;;
+    64)
+      echo 2746
+      ;;
+    65)
+      echo 2781
+      ;;
+    66)
+      echo 2817
+      ;;
+    67)
+      echo 2852
+      ;;
+    68)
+      echo 2887
+      ;;
+    69)
+      echo 2929
+      ;;
+    70)
+      echo 2972
+      ;;
+    71)
+      echo 3014
+      ;;
+    72)
+      echo 3053
+      ;;
+    73)
+      echo 3092
+      ;;
+    74)
+      echo 3131
+      ;;
+    75)
+      echo 3170
+      ;;
+    76)
+      echo 3206
+      ;;
+    77)
+      echo 3242
+      ;;
+    78)
+      echo 3277
+      ;;
+    79)
+      echo 3313
+      ;;
+    80)
+      echo 3349
+      ;;
+    81)
+      echo 3385
+      ;;
+    82)
+      echo 3421
+      ;;
+    83)
+      echo 3457
+      ;;
+    84)
+      echo 3495
+      ;;
+    85)
+      echo 3532
+      ;;
+    86)
+      echo 3570
+      ;;
+    87)
+      echo 3607
+      ;;
+    88)
+      echo 3646
+      ;;
+    89)
+      echo 3686
+      ;;
+    90)
+      echo 3725
+      ;;
+    91)
+      echo 3764 # after this point, values rise by about half as much per step
+      ;;
+    92)
+      echo 3780
+      ;;
+    93)
+      echo 3796
+      ;;
+    94)
+      echo 3812
+      ;;
+    95)
+      echo 3828 # thinkpad maxes out here, at around 290 cd/m²
+      ;;
+    96)
+      echo 3828
+      bl_alert
+      ;;
+    97)
+      echo 3828
+      bl_alert
+      ;;
+    98)
+      echo 3828
+      bl_alert
+      ;;
+    99)
+      echo 3828
+      bl_alert
+      ;;
+    100)
+      echo 3828
+      bl_alert
+      ;;
+  esac
+}
+
+rassoc()
+{
+  # look up reverse-associations within the script itself.
+  # WILL FAIL if not currently set to a known value!!!
+  grep -B1 'echo '"$1" "$0"|head -n 1|sed 's/ *//;s/)//'
+}
+
+get_current_raw()
+{
+  cat "$SYSFSPATH"'/brightness'
+}
+
+get_current()
+{
+  rassoc "$(get_current_raw)"
+}
+
+bl24_up()
+{
+  BRIGHT=`get_current`
+  # if on a known value
+  if [ "$BRIGHT" ] && [ "$BRIGHT" -lt 100 ]; then
+    echo "$(expr "$BRIGHT" '+' "$1")"
+    U2412M_bright "$(expr "$BRIGHT" '+' "$1")" > "$SYSFSPATH"'/brightness'
+  else
+    1>&2 echo "$BRIGHT"
+    1>&2 echo "err: Current brightness value not in table, or already maxed out."
+  fi
+}
+
+bl24_dn()
+{
+  BRIGHT=`get_current`
+  # if on a known value
+  if [ "$BRIGHT" ] && [ "$BRIGHT" -gt 0 ]; then
+    echo "$(expr "$BRIGHT" '-' "$1")"
+    U2412M_bright "$(expr "$BRIGHT" '-' "$1")" > "$SYSFSPATH"'/brightness'
+  else
+    1>&2 echo "$BRIGHT"
+    1>&2 echo "err: Current brightness value not in table, or already at minimum."
+  fi
+}
+
+if [ "$#" -eq 0 ]; then
+  get_current
+else
+  case "$1" in
+    get)
+      get_current
+      ;;
+    up)
+      if [ "$2" ]; then
+        bl24_up "$2"
+      else
+        bl24_up 1
+      fi
+      ;;
+    down | dn)
+      if [ "$2" ]; then
+        bl24_dn "$2"
+      else
+        bl24_dn 1
+      fi
+      ;;
+    *)
+      if [ "$1" -lt 101 ] && [ "$1" -ge 0 ]; then
+        LEVEL="$(U2412M_bright "$1")"
+        echo "$1"' -> '"$LEVEL"
+        echo "$LEVEL" > "$SYSFSPATH"'/brightness'
+      else
+        1>&2 echo "Err: please enter 'up,' 'down,' or a value between 1 and 100."
+      fi
+      ;;
+  esac
+fi

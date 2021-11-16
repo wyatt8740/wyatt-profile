@@ -3,14 +3,20 @@ if [ -z "$(ps aux | grep stalonetray | grep -v grep)" ]; then
     echo "Starting stalonetray."
     # Starts a stand alone tray program so that I can use common applet things
     # in a CDE desktop.
-    stalonetray --kludges force_icons_size --icon-size 24 --window-strut none > /dev/null 2>&1 & disown
+    # Note: ~/.stalonetrayrc contains params, too.
+    #    stalonetray --kludges force_icons_size --icon-size 24 --window-strut none > /dev/null 2>&1 & disown
+    stalonetray > /dev/null 2>&1 & disown
     # give it a moment so we're pretty sure it's initialized before we start
     # throwing programs at it
     sleep 2
-    # Network manager applet
-    nm-applet > /dev/null 2>&1 & disown
-    # SCIM input method applet
-    scim > /dev/null 2>&1 & disown
+    # NetworkManager applet (disabled late 2019; systemd-shim became unusable)
+    # nm-applet > /dev/null 2>&1 & disown
+    # wicd applet (to mostly replace nm-applet) (except for VPN stuff)
+    # (nevermind I'll just use wpa_supplicant)
+    # wicd-gtk > /dev/null 2>&1 & disown
+    # SCIM input method applet. Attempting to make font AA better, too
+    FREETYPE_PROPERTIES=truetype:interpreter-version=35 scim > /dev/null 2>&1 & disown
+#    ibus > /dev/null 2>&1 & disown
     # ALSA sound mixer applet
     pnmixer > /dev/null 2>&1 & disown
     # Mate power manager for battery indicator
