@@ -131,71 +131,71 @@ sudo apt-get install dpkg-dev debhelper devscripts
 # script. Keeping it for safety.
 set +x
 # deb:
-SRCLINE="$(grep 'deb ' /etc/apt/sources.list| grep 'sid main' | grep -i debian.org)"
-if [ "$(echo "$SRCLINE" | wc -l)" -gt 1 ]; then
+#SRCLINE="$(grep 'deb ' /etc/apt/sources.list| grep 'sid main' | grep -i debian.org)"
+#if [ "$(echo "$SRCLINE" | wc -l)" -gt 1 ]; then
   # we might be specifying [arch=] for our sources. Try to narrow our scope
-  SRCLINE="$(grep 'deb ' /etc/apt/sources.list| grep 'sid main' | grep -i debian.org | grep $(dpkg --print-architecture))"
-  if [ "$(echo "$SRCLINE" | wc -l)" -gt 1 ]; then
-    echo "Something's wrong - this script can't figure out what line to add"
-    echo "contrib and non-free sources to in sources.list. Please either"
-    echo "fix your /etc/apt/sources.list, fix this script, or comment out"
-    echo "this section to skip it."
-  fi
-fi
+#  SRCLINE="$(grep 'deb ' /etc/apt/sources.list| grep 'sid main' | grep -i debian.org | grep $(dpkg --print-architecture))"
+ # if [ "$(echo "$SRCLINE" | wc -l)" -gt 1 ]; then
+  #  echo "Something's wrong - this script can't figure out what line to add"
+   # echo "contrib and non-free sources to in sources.list. Please either"
+   # echo "fix your /etc/apt/sources.list, fix this script, or comment out"
+   # echo "this section to skip it."
+ # fi
+#fi
 # could also be we have no lines in the file to begin with
-if [ "$(echo "$SRCLINE" | wc -l)" -lt 1 ]; then
-  echo "NOTE: either something in /etc/apt/sources.list is very wrong, or"
-  echo "We need to add a deb line for your binary packages. If you want"
-  echo "to add these sources, press enter. Otherwise, abort the script and fix"
-  echo "things."
-  continueok
-  sudo sh -c 'echo "deb http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
-fi
-if [ -n "$SRCLINE" ]; then
-  SRCLINE_SED="$(echo "$SRCLINE" | sed 's/\[/\\\[/g;s/\]/\\\]/g' )"
-  export RESULT=1
-  set -x
-  sudo sh -c "sed 's/$"
-  set +x
-  grep 'sid main' /etc/apt/sources.list
-  grep -Fxq 'deb http://ftp.us.debian.org/debian sid main contrib non-free' /etc/apt/sources.list
-  if [ "$?" -ne 0 ]; then
-    set -x
+#if [ "$(echo "$SRCLINE" | wc -l)" -lt 1 ]; then
+ # echo "NOTE: either something in /etc/apt/sources.list is very wrong, or"
+ # echo "We need to add a deb line for your binary packages. If you want"
+ # echo "to add these sources, press enter. Otherwise, abort the script and fix"
+ # echo "things."
+  #continueok
+  #sudo sh -c 'echo "deb http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
+#fi
+#if [ -n "$SRCLINE" ]; then
+ # SRCLINE_SED="$(echo "$SRCLINE" | sed 's/\[/\\\[/g;s/\]/\\\]/g' )"
+ # export RESULT=1
+  #set -x
+  #sudo sh -c "sed 's/$"
+  #set +x
+  #grep 'sid main' /etc/apt/sources.list
+  #grep -Fxq 'deb http://ftp.us.debian.org/debian sid main contrib non-free' /etc/apt/sources.list
+  #if [ "$?" -ne 0 ]; then
+    #set -x
     # this should really just append ' contrib non-free' to the end of the
     # line but I'm having some trouble with sed and I'm leaving for school
     # pretty soon. :(
-    sudo sh -c 'echo "deb-src http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
-    set +x
-  fi
-  unset RESULT
-fi
+#    sudo sh -c 'echo "deb-src http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
+ #   set +x
+  #fi
+  #unset RESULT
+#fi
 # deb-src:
-export RESULT=1
-grep -Fxq 'deb-src http://ftp.us.debian.org/debian sid main contrib non-free' /etc/apt/sources.list
-if [ "$?" -ne 0 ]; then
-  set -x
-  sudo sh -c 'echo "deb-src http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
-  set +x
-fi
-unset RESULT
-sudo apt-get update
+#export RESULT=1
+#grep -Fxq 'deb-src http://ftp.us.debian.org/debian sid main contrib non-free' /etc/apt/sources.list
+#if [ "$?" -ne 0 ]; then
+  #set -x
+#  sudo sh -c 'echo "deb-src http://ftp.us.debian.org/debian sid main contrib non-free" >> /etc/apt/sources.list'
+ # set +x
+#fi
+#unset RESULT
+#sudo apt-get update
 set +x
-echo "Next up:"
-echo "Building fvwm from source with a patch for CJK fallback fonts."
-continueok
-set -x
-sudo apt-get build-dep fvwm
-mkdir -p "$HOME""/development/fvwm"
-cd "$HOME""/development/fvwm"
-apt-get source fvwm
-# hoping this is the right dir :\
-cd "$(find . -maxdepth 1 -type d -name "fvwm*" | head -n 1)"
-patch -p0 < "$STARTDIR""/patches/fvwm.cjk.patch"
-echo "if patch was successful, hit enter to build."
-dpkg-buildpackage -uc -us -b
-cd "$HOME""/development/fvwm"
-DEBNAME="$(find . -maxdepth 1 -name "*.deb")"
-sudo dpkg -i "$DEBNAME"
+#echo "Next up:"
+#echo "Building fvwm from source with a patch for CJK fallback fonts."
+#continueok
+#set -x
+#sudo apt-get build-dep fvwm
+#mkdir -p "$HOME""/development/fvwm"
+#cd "$HOME""/development/fvwm"
+#apt-get source fvwm
+## hoping this is the right dir :\
+#cd "$(find . -maxdepth 1 -type d -name "fvwm*" | head -n 1)"
+#patch -p0 < "$STARTDIR""/patches/fvwm.cjk.patch"
+#echo "if patch was successful, hit enter to build."
+#dpkg-buildpackage -uc -us -b
+#cd "$HOME""/development/fvwm"
+#DEBNAME="$(find . -maxdepth 1 -name "*.deb")"
+#sudo dpkg -i "$DEBNAME"
 set +x
 cd "$STARTDIR"
 echo "Next up:"
@@ -445,16 +445,16 @@ sudo mkdir -p /etc/X11
 sudo cp "$STARTDIR""/etc/X11/xorg.conf" "/etc/X11/xorg.conf"
 set +x
 echo "done copying."
-echo "Next up:"
-echo "Installing intel-gpu-tools for the intel_backlight utility."
-continueok
-# my ACPI scripts (installed next) depend on intel_backlight to actually turn
-# the backlight completely _off_. LVDS laptops don't provide the means for
-# this via sysfs like eDP ones do (More accurately, the provided sysfs file
-# does nothing to the backlight state on LVDS models).
-set -x
-sudo apt-get install intel-gpu-tools
-set +x
+#echo "Next up:"
+#echo "Installing intel-gpu-tools for the intel_backlight utility."
+#continueok
+## my ACPI scripts (installed next) depend on intel_backlight to actually turn
+## the backlight completely _off_. LVDS laptops don't provide the means for
+## this via sysfs like eDP ones do (More accurately, the provided sysfs file
+## does nothing to the backlight state on LVDS models).
+#set -x
+#sudo apt-get install intel-gpu-tools
+#set +x
 echo "Next up:"
 echo "Copying ACPI actions/event rules to /etc/acpi."
 continueok
@@ -474,14 +474,13 @@ continueok
 set -x
 sudo kill -SIGHUP `pidof acpid`
 set +x
-echo "Next up:"
-echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
-echo "performs a few actions like setting up my keymap and turning off"
-echo "the bluetooth/WAN radios at boot. It also sets up a couple buttons for"
-echo "my thinkpad 201 tablet."
-echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
-continueok
-set -x
-sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
+#echo "Next up:"
+#echo "Copying rc.local to /etc/rc.local. This is a startup script that just"
+#echo "performs a few actions like setting up my keymap and turning off"
+#echo "the bluetooth/WAN radios at boot."
+#echo "THIS WILL OVERWRITE AN EXISTING rc.local FILE."
+#continueok
+#set -x
+#sudo sh -c 'cat '"$STARTDIR"'/etc/rc.local > /etc/rc.local'
 set +x
 echo "Reached end of setup script! Exiting."
