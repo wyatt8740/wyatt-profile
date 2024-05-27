@@ -1,4 +1,3 @@
-
 ##################################
 #  ____________________________
 # (   _________________________)
@@ -101,7 +100,6 @@ AddToFunc   StartMaximized
 + I ThisWindow ("MComix", Maximized) WindowStyle !Borders
 + I ThisWindow ("Navigator", Maximized) Maximize ewmhiwa # unmaximize
 + I ThisWindow ("Chromium", Maximized) Maximize ewmhiwa # unmaximize
-+ I ThisWindow ("Xchat", Maximized) Maximize ewmhiwa # unmaximize
 + I ThisWindow ("Glide64mk2") Maximize ewmhiwa
 + I ThisWindow ("Glide64mk2") WindowStyle !Title
 + I ThisWindow ("Glide64mk2") WindowStyle !Borders
@@ -116,8 +114,6 @@ AddToFunc   StartMaximized
 + I ThisWindow RefreshWindow # synchronize states
 + I ThisWindow ("Navigator") ToggleBordersMaximize
 + I ThisWindow ("Chromium") ToggleBordersMaximize
-+ I ThisWindow ("Xchat") ToggleBordersMaximize
-
 
 
 
@@ -180,6 +176,21 @@ AddToFunc StayPutFunc
 + I Layer 0 4
 + I Raise
 
+DestroyFunc ThisFullScreenMaxHandler
+AddToFunc ThisFullScreenMaxHandler
++ I ThisWindow ("Xnp21kai") Move -7p -52p ewmhiwa
++ I ThisWindow ("Xnp21kai") RefreshWindow
++ I ThisWindow (!"Xnp21kai") ThisFullScreenMax
+
+DestroyFunc FullScreenMaxHandler
+AddToFunc FullScreenMaxHandler
++ I Current ("Xnp21kai") WindowStyle !Borders
++ I Current ("Xnp21kai") RefreshWindow
++ I Current ("Xnp21kai") Move -0p -0p
++ I Current ("Xnp21kai") RefreshWindow
++ I Current (!"Xnp21kai") FullScreenMax
+
+
 # Toggle 'full screen'
 DestroyFunc FullScreenMax
 AddToFunc FullScreenMax
@@ -239,6 +250,25 @@ AddToFunc   ViewManPage
 + I Exec exec uxterm -g 80x40 \
   -n "Manual Page - $0" -T "Manual Page - $0" -e man "$0"
 
+# # Function: SetBG $0
+# #
+# # SetBG is used with the background menu to set the background
+# # image and configure it to be loaded the next time fvwm is run.
+# # Note, fvwm-root can't use .jpeg or resize images. Use something
+# # like display, feh, etc.
+# # I use hsetroot instead; I use it through a script called 'backgroundify'
+# # which just uses my icc-burn python script to apply color correction before
+# # loading.
+# DestroyFunc SetBG
+# AddToFunc   SetBG
+# + I Test (f $[FVWM_USERDIR]/images/background/$0) \
+#     Exec exec $HOME/bin/backgroundify $[FVWM_USERDIR]/images/background/$0
+# + I TestRc (Match) Break
+# + I Test (!f $[FVWM_DATADIR]/default-config/images/background/$0) Break
+# # 2022 comment out
+# ###+ I Exec exec hsetroot -tile $[FVWM_DATADIR]/default-config/images/background/$0
+# + I Exec exec $HOME/bin/backgroundify $[FVWM_DATADIR]/default-config/images/background/$0
+
 # Function: SetBG $0
 #
 # SetBG is used with the background menu to set the background
@@ -248,15 +278,17 @@ AddToFunc   ViewManPage
 DestroyFunc SetBG
 AddToFunc   SetBG
 + I Test (f $[FVWM_USERDIR]/images/background/$0) \
-    Exec exec hsetroot -tile $[FVWM_USERDIR]/images/background/$0
-+ I TestRc (Match) Exec exec ln -fs images/background/$0 \
-    $[FVWM_USERDIR]/.BGdefault
+    Exec exec $HOME/bin/backgroundify $[FVWM_USERDIR]/images/background/$0
+#    Exec exec hsetroot -tile $[FVWM_USERDIR]/images/background/$0
++ I TestRc (Match) Exec exec ln -fs $[FVWM_USERDIR]/images/background/$0 \
+$[FVWM_USERDIR]/.BGdefault.uncorrected
 + I TestRc (Match) Break
 + I Test (!f $[FVWM_DATADIR]/default-config/images/background/$0) Break
-+ I Exec exec hsetroot -tile $[FVWM_DATADIR]/default-config/images/background/$0
+## + I Exec exec hsetroot -tile $[FVWM_DATADIR]/default-config/images/background/$0
 # + I Exec exec fvwm-root $[FVWM_DATADIR]/default-config/images/background/$0
++ I Exec exec $HOME/bin/backgroundify $[FVWM_DATADIR]/default-config/images/background/$0
 + I Exec exec ln -fs $[FVWM_DATADIR]/default-config/images/background/$0 \
-    $[FVWM_USERDIR]/.BGdefault
+    $[FVWM_USERDIR]/.BGdefault.uncorrected
 
 # Version for 2560px screens that uses the hsetroot -extend option instead.
 # Obviously this is only good for one session, as currently set up.
@@ -344,13 +376,15 @@ EdgeThickness 0
 #xclock does not get a titlebar (use alt-shift-rightclick to set options and
 # alt-drag to move)
 # keep on current desk, no matter which desk is being viewed
-Style "xclock" Sticky
 # No titlebar on the window
-Style "xclock" !Title
 # No borders on the window
-Style "xclock" !Borders
 # Keep on top (alt-shift-rightclick to get in the menu to turn off)
-Style "xclock" StaysOnTop
+Style "xclock" Sticky, !Title, !Borders, StaysOnTop
+
+# Dragon - click and drag
+Style "dragon" StaysOnTop, Sticky
+
+Style "XCal" Sticky, !Title, !Borders, StaysOnTop
 
 # tray - stalonetray
 Style "stalonetray" Sticky
@@ -372,7 +406,23 @@ MoveThreshold 3
 
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
-Style * ClickToFocus, MouseFocusClickRaises
+#   If only ClickToFocus, MouseFocusClickRaises: click must be in\
+#   decorations to actually raise. Add ClickToFocusRaises to change this.
+# ClickToFocusRaises: clicking ANYWHERE IN THE WINDOW will raise.
+#   ClickToFocusPassesClickOff: don't pass click through to window
+#   when raising to focus.
+# ClickToFocusPassesClick: Pass click through to program when raising
+# (on by default)
+#Style * ClickToFocus, MouseFocusClickRaises, ClickToFocusRaises, ClickToFocusPassesClickOff
+Style * ClickToFocus, MouseFocusClickRaises, ClickToFocusRaises, ClickToFocusPassesClick
+
+# This function defaults to Iconify Off, Focus, Raise. We want FlipFocus or
+# e.g. opening a file in GIMP from mcomix while GIMP is already running will
+# send mcomix to the very bottom of the ring.
+DestroyFunc EWMHActivateWindowFunc
+AddToFunc EWMHActivateWindowFunc I Iconify Off
+ + I FlipFocus
+ + I Raise
 
 # when a window is destroyed, focus the previous one automatically
 # from archwiki copypaste
@@ -383,6 +433,8 @@ Style * ClickToFocus, MouseFocusClickRaises
 
 # Wine needs this I think
 Style * Lenience
+# FVWM3 equivalent:
+Style * FPLenient
 #Style * Leniency
 
 # Default Font
@@ -418,6 +470,7 @@ Style * ResizeOpaque
 Style * DecorateTransient, StackTransientParent
 
 #Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+# GrabFocusTransient =  FPGrabFocusTransient + FPReleaseFocusTransient
 Style * FPGrabFocusTransient, FPReleaseFocusTransient
 
 # WindowShade
@@ -468,15 +521,16 @@ Style FvwmButtons !Title, !Borders, !Handles, Sticky, \
 #      13 - FvwmPager Active Page
 #      14 - FvwmIconMan Iconified Button
 ###########
+# dark green-blue background, 2023-2024
+# Colorset 0  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
+# dark red
 Colorset 0  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
-Colorset 1  fg #000000, bg #b0b4c4, hi, sh, Plain, NoShape
 #Colorset 2  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
 # pink background for CDE-like crimson theme window borders:
 # Colorset 2  fg #ffffff, bg #b44c7b, hi, sh, Plain, NoShape
 # a nice bluish-purple background for custom window borders (used for a long time, until august 2020)
 #Colorset 2  fg #ffffff, bg #574cb4, hi, sh, Plain, NoShape
-# darker blue
-Colorset 2  fg #ffffff, bg #35476b, hi, sh, Plain, NoShape
+
 # middling blue
 # Colorset 2  fg #ffffff, bg #3f5580, hi, sh, Plain, NoShape
 # relaxing blue background for custom window borders
@@ -488,11 +542,22 @@ Colorset 2  fg #ffffff, bg #35476b, hi, sh, Plain, NoShape
 # boring gray. Good for not distracting the user
 # Colorset 2  fg #606060, bg #101010, hi, sh, Plain, NoShape
 
+# darker blue (CURRENT UNTIL AUGUST 2023)
+# Colorset 1  fg #000000, bg #b0b4c4, hi, sh, Plain, NoShape
+# Colorset 2  fg #ffffff, bg #35476b, hi, sh, Plain, NoShape
+
+Colorset 1  fg #000000, bg #b0b4c4, hi, sh, Plain, NoShape
+Colorset 2  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
+#Colorset 2  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
+#Colorset 2  fg #ffffff, bg #773cae, hi, sh, Plain, NoShape
+
 Colorset 3  fg black, bg #4d4d4d, hi #676767, sh #303030, Plain, NoShape
 Colorset 4  fg black, bg #2d2d2d, hi #474747, sh #101010, Plain, NoShape
 Colorset 5  fg #000000, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 6  fg #ffffff, bg #2d2d2d, hi, sh, Plain, NoShape
 Colorset 7  fg grey30, bg #ffffff, hi, sh, Plain, NoShape
+# Colorset 8  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
+# Colorset 10 fg #ffffff, bg #003c3c, hi #aaaaaa, sh #999999, Plain, NoShape
 Colorset 8  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
 Colorset 10 fg #ffffff, bg #003c3c, hi #aaaaaa, sh #999999, Plain, NoShape
 Colorset 11 fg #ffffff, bg #1a6e99, hi #ffffff, sh #ffffff, Plain, NoShape
@@ -514,6 +579,13 @@ Colorset 17 fg #b0b0b0, bg #565861, hi, sh, Plain, NoShape
 #MenuStyle * TrianglesSolid, TrianglesUseFore
 #MenuStyle * ItemFormat "%|%3.1i%5.3l%5.3>%|"
 MenuStyle * Mwm
+
+# added the next two for FVWM3 in 2023 - otherwise, was defaulting to colorset
+# 10 (which doesn't look bad! But it's a change).
+MenuStyle * MenuColorset 1
+MenuStyle * TitleColorset 1
+
+
 # MenuStyle * Font "xft:Sans:Bold:size=8:antialias=True"
 # tahoma
 MenuStyle * Font "xft:Microsoft Sans Serif:Regular:size=8:antialias=False,xft:MS UI Gothic:size=8:antialias=false"
@@ -532,7 +604,8 @@ DestroyMenu MenuFvwmRoot
 AddToMenu   MenuFvwmRoot "Fvwm" Title
 + "&Programs%icons/programs.png%" Popup MenuPrograms
 + "XDG &Menu%icons/apps.png%" Popup XDGMenu
-+ "&XTerm%icons/terminal.png%" Exec exec mate-terminal
+#+ "&XTerm%icons/terminal.png%" Exec exec mate-terminal
++ "&XTerm%icons/terminal.png%" Exec exec xterm
 + "" Nop
 # + "Fvwm&Console%icons/terminal.png%" Module FvwmConsole -terminal uxterm
 + "Fvwm&Console%icons/terminal.png%" Exec exec mate-terminal -e /usr/bin/FvwmPrompt
@@ -597,6 +670,7 @@ AddToMenu BGEV1280
 + "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1280/eeveelution_gray_1280.png"
 + "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1280/eeveelution_indigo_1280.png"
 + "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1280/eeveelution_rich-green_1280.png"
++ "Regal%bgicons/eeveelution/eeveelution_color_regal.png%" SetBG "1280/eeveelution_regal_1280.png"
 + "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1280/eeveelution_purple_1280.png"
 + "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1280/eeveelution_sensible_blue_1280.png"
 + "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1280/eeveelution_teal_1280.png"
@@ -614,6 +688,7 @@ AddToMenu BGEV1440
 + "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1440/eeveelution_gray_1440.png"
 + "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1440/eeveelution_indigo_1440.png"
 + "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1440/eeveelution_rich-green_1440.png"
++ "Regal%bgicons/eeveelution/eeveelution_color_regal.png%" SetBG "1440/eeveelution_regal_1440.png"
 + "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1440/eeveelution_purple_1440.png"
 + "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1440/eeveelution_sensible_blue_1440.png"
 + "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1440/eeveelution_teal_1440.png"
@@ -631,6 +706,7 @@ AddToMenu BGEV1920
 + "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "1920/eeveelution_gray_1920.png"
 + "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "1920/eeveelution_indigo_1920.png"
 + "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "1920/eeveelution_rich-green_1920.png"
++ "Regal%bgicons/eeveelution/eeveelution_color_regal.png%" SetBG "1920/eeveelution_regal_1920.png"
 + "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "1920/eeveelution_purple_1920.png"
 + "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "1920/eeveelution_sensible_blue_1920.png"
 + "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBG "1920/eeveelution_teal_1920.png"
@@ -648,6 +724,7 @@ AddToMenu BGEV2560
 + "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBGExtend "full/eeveelution_gray_full.png"
 + "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBGExtend "full/eeveelution_indigo_full.png"
 + "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBGExtend "full/eeveelution_rich-green_full.png"
++ "Regal%bgicons/eeveelution/eeveelution_color_regal.png%" SetBG "full/eeveelution_regal_full.png"
 + "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBGExtend "full/eeveelution_purple_full.png"
 + "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBGExtend "full/eeveelution_sensible_blue_full.png"
 + "Teal%bgicons/eeveelution/eeveelution_color_teal.png%" SetBGExtend "full/eeveelution_teal_full.png"
@@ -668,6 +745,7 @@ AddToMenu SolidColors
 + "Evergreen%bgicons/eeveelution/eeveelution_color_evergreen.png%" SetBG "bgicons/eeveelution/eeveelution_color_evergreen.png"
 + "Gray%bgicons/eeveelution/eeveelution_color_gray.png%" SetBG "bgicons/eeveelution/eeveelution_color_gray.png"
 + "Indigo%bgicons/eeveelution/eeveelution_color_indigo.png%" SetBG "bgicons/eeveelution/eeveelution_color_indigo.png"
++ "Regal%bgicons/eeveelution/eeveelution_color_regal.png%" SetBG "bgicons/eeveelution/eeveelution_color_regal.png"
 + "Rich Green%bgicons/eeveelution/eeveelution_color_rich-green.png%" SetBG "bgicons/eeveelution/eeveelution_color_rich-green.png"
 + "Purple%bgicons/eeveelution/eeveelution_color_purple.png%" SetBG "bgicons/eeveelution/eeveelution_color_purple.png"
 + "Sensible Blue%bgicons/eeveelution/eeveelution_color_sensible_blue.png%" SetBG "bgicons/eeveelution/eeveelution_color_sensible_blue.png"
@@ -678,24 +756,35 @@ DestroyMenu BG1280
 AddToMenu BG1280
 + "Eeveelution" Popup BGEV1280
 + "Bliss" SetBG "bliss1280x800.png"
-+ "Phantasy Star II (a)" SetBG "1280/phantasy_1280.jpg"
-+ "Phantasy Star II (b)" SetBG "1280/phantasy2_1280.png"
-+ "Phantasy Star III" SetBG "1280/ps3_1.png"
++ "Phantasy" SetBG "1280/phantasy_1280.jpg"
 + "Missile Command" SetBG "1280/missile_command.png"
++ "PhantasyII" SetBG "1280/phantasy2_1280.png"
++ "Nei" SetBG "1280/ps2_nei_orig_artist_wallpaper6.png"
++ "Nei (Calib)" SetBG "1280/ps2_nei_orig_artist_wallpaper6_calib.png"
++ "Nei2" SetBG "1280/ps2_nei_orig_artist_wallpaper7.png"
++ "Nei2 (Calib)" SetBG "1280/ps2_nei_orig_artist_wallpaper7_calib.png"
 + "HeartGold" SetBG "1280/HeartGold_1280.png"
 + "SoulSilver" SetBG "1280/SoulSilver_1280.png"
+
 
 DestroyMenu BG1440
 AddToMenu BG1440
 + "Eeveelution" Popup BGEV1440
 + "Phantasy" SetBG "1440/phantasy_1440.jpg"
++ "Bliss" SetBG "1440/bliss.jpg"
++ "Nei" SetBG "1440/ps2_nei_orig_artist_wallpaper6.png"
++ "Nei (Calib)" SetBG "1440/ps2_nei_orig_artist_wallpaper6_calib.png"
++ "Nei2" SetBG "1440/ps2_nei_orig_artist_wallpaper7.png"
++ "Nei2 (Calib)" SetBG "1440/ps2_nei_orig_artist_wallpaper7_calib.png"
 
 DestroyMenu BG1920
 AddToMenu BG1920
 + "Eeveelution" Popup BGEV1920
 + "Bliss1200" SetBG bliss1920x1200.png
 + "Phantasy" SetBG "1920/phantasy_1920.jpg"
-+ "Phantasy Star III" SetBG "1920/ps3_1920.png"
++ "Nei" SetBG "1920/ps2_nei_orig_artist_wallpaper6.png"
++ "Nei2" SetBG "1920/ps2_nei_orig_artist_wallpaper7.png"
++ "Nei2 Bright" SetBG "1920/ps2_nei_orig_artist_wallpaper7_bright.png"
 + "HeartGold" SetBG "1920/HeartGold_1920.png"
 + "SoulSilver" SetBG "1920/SoulSilver_1920.png"
 
@@ -709,8 +798,19 @@ AddToMenu BGDual
 + "Eeveelution" Popup BGEVDual
 + "Bliss1550" SetBG bliss3200x1550.png
 
+DestroyMenu ColorCorrect
+AddToMenu ColorCorrect
++ "Perceptual" Exec exec $HOME/bin/background-intent 0
++ "Relative Colorimetric" Exec exec $HOME/bin/background-intent 1
+# this is technically saturation, but I've replaced it with another intent
++ "Luminance Preserving Perceptual" Exec exec $HOME/bin/background-intent 2
++ "Absolute Colorimetric" Exec exec $HOME/bin/background-intent 3
++ "None" Exec exec $HOME/bin/background-intent 4
+
 DestroyMenu BGMenu
 AddToMenu   BGMenu "Wallpapers" Title
++ "Color correction" Popup ColorCorrect
++ "" Nop
 + "1280%icons/wallpaper.png%" Popup BG1280
 + "1440%icons/wallpaper.png%" Popup BG1440
 + "1920%icons/wallpaper.png%" Popup BG1920
@@ -731,11 +831,12 @@ AddToMenu   BGMenu "Wallpapers" Title
 DestroyMenu MenuWindowOps
 AddToMenu   MenuWindowOps
 + "Move"       Move
-+ "Move (0,0)" Current Move 0p 0p
++ "Move (0,0)" Move 0p 0p
++ "Move (Center)" Move 50-50w 50-50w
 + "Resize"     Resize
 + "Iconify"    Iconify
 + "Maximize"   ThisToggleBordersMaximize
-+ "Fullscreen" ThisFullScreenMax
++ "Fullscreen" ThisFullScreenMaxHandler
 + "Borders"    ThisToggleBorders
 + "Shade"      WindowShade
 + "Stick"      Stick
@@ -747,11 +848,12 @@ AddToMenu   MenuWindowOps
 DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
 + "Move"                Move
-+ "Move (0,0)"          Current Move 0p 0p
++ "Move (0,0)"          Move 0p 0p
++ "Move (Center)" Move 50-50w 50-50w
 + "Resize"              Resize
 + "(De)Iconify"         Iconify
 + "(Un)Maximize"        ThisToggleBordersMaximize
-+ "(Un)Fullscreen"      ThisFullScreenMax
++ "(Un)Fullscreen"      ThisFullScreenMaxHandler
 + "(Un)Borderify"       ThisToggleBorders
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
@@ -765,7 +867,9 @@ AddToMenu   MenuWindowOpsLong
 + "Lower"		Lower
 + "" Nop
 + "StaysOnTop"          Pick (CirculateHit) Layer 0 6
++ "StaysNearTop"        Pick (CirculateHit) Layer 0 5
 + "StaysPut"            Pick (CirculateHit) StayPutFunc
++ "StaysNearBottom"     Pick (CirculateHit) Layer 0 3
 + "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
 + "" Nop
 + "Identify"            Module FvwmIdent
@@ -871,7 +975,12 @@ Silent Key F1 A M Menu MenuFvwmRoot
 #Silent Key Menu A A Menu MenuFvwmRoot
 
 # Silent Key XF86RotateWindows A N Exec exec /home/user/bin/rotate-cycle normal
-
+Silent Key Page_Up A CM Exec exec /home/wyatt/bin/volup
+Silent Key Page_Down A CM Exec exec /home/wyatt/bin/voldown
+Silent Key KP_Page_Up A CM Exec exec /home/wyatt/bin/volup
+Silent Key KP_Page_Down A CM Exec exec /home/wyatt/bin/voldown
+Silent Key KP_9 A CM Exec exec /home/wyatt/bin/volup
+Silent Key KP_3 A CM Exec exec /home/wyatt/bin/voldown
 # Silent Key XF86TaskPane A N Exec exec /home/user/bin/rotate-cycle invert
 
 # Menu key is compose key
@@ -888,25 +997,33 @@ Silent Key Tab A M WindowList Root c c CurrentDesk, SelectOnRelease Meta_L
 # Made my applet send alt+shift+tab as well.
 # Silent Key Tab A SM WindowList Root c c CurrentDesk, SelectOnRelease
 # Edit: FVWM3 release 1.0.0 has FvwmPrompt; problem solved.
-Silent Key F1 A C GotoDesk 0 0
-Silent Key F2 A C GotoDesk 0 1
-Silent Key F3 A C GotoDesk 0 2
-Silent Key F4 A C GotoDesk 0 3
+#Silent Key F1 A C GotoDesk 0 0
+#Silent Key F2 A C GotoDesk 0 1
+#Silent Key F3 A C GotoDesk 0 2
+#Silent Key F4 A C GotoDesk 0 3
 Silent Key F13 A A 
 # Silent Key Super_R A A Exec exec mate-terminal
 
 # ctrl+alt+arrowkey to cycle through desks
 # replace 'C' with 'A' (anything) to make it "alt+arrowkey" instead
 Silent Key Left A CM GotoDesk  -1 0 0 3
+Silent Key KP_Left A CM GotoDesk  -1 0 0 3
 Silent Key Right A CM GotoDesk +1 0 0 3
-
+Silent Key KP_Right A CM GotoDesk +1 0 0 3
+# ctrl+shift+leftArrow or ctrl+shift+rightArrow to rotate
+#Silent Key Right A CS Exec exec $HOME/bin/rotate-left
+#Silent Key Left A CS Exec exec $HOME/bin/rotate-normal
 # ctrl+alt+upArrow to bump brightness up
 Silent Key Up A CM Exec exec $HOME/bin/brightup_acpi
+Silent Key KP_Up A CM Exec exec $HOME/bin/brightup_acpi
 # ctrl+alt+downArrow to bump brightness down
 Silent Key Down A CM Exec exec $HOME/bin/brightdown_acpi
+Silent Key KP_Down A CM Exec exec $HOME/bin/brightdown_acpi
 # ctrl+super+up and ctrl+super+down
 Silent Key Up A C4 Exec exec $HOME/bin/brightup_acpi
 Silent Key Down A C4 Exec exec $HOME/bin/brightdown_acpi
+Silent Key KP_Up A C4 Exec exec $HOME/bin/brightup_acpi
+Silent Key KP_Down A C4 Exec exec $HOME/bin/brightdown_acpi
 
 # u2412m external brightness up/down on ctrl+alt+I and ctrl+alt+K
 Silent Key 'i' A CM Exec exec $HOME/bin/u2412m_brightup
@@ -925,14 +1042,16 @@ Silent Key XF86Launch1 A M Exec exec $HOME/bin/lcdon
 # ctrl-alt-g
 #Silent Key g A CM FullScreenMax
 # ctrl-alt-8
-Silent Key 8 A CM FullScreenMax
+Silent Key 8 A CM FullScreenMaxHandler
 
 Silent Key 2 A CM Exec exec halfWindowSize
 Silent Key 4 A CM Exec exec doubleWindowSize
+Silent Key 3 A CM Exec exec window.3x
+Silent Key 5 A CM Exec exec window3x
 
 # hide window (with my special script which uses xdotool)
 # ctrl-alt-h
-Silent Key h A CM Exec exec $HOME/bin/hide.sh
+Silent Key h A CM Exec exec $HOME/bin/hidewindow.sh
 
 # restart fvwm
 # ctrl-alt-r
@@ -941,11 +1060,21 @@ Silent Key r A CM Restart
 # show last hidden window (with my special script)
 # 'u' for 'unhide'
 # ctrl-alt-u
-Silent Key u A CM Exec exec $HOME/bin/unhide.sh
+Silent Key u A CM Exec exec $HOME/bin/showwindow.sh
 
 # toggle borders
 # ctrl-alt-b
 Silent Key b A CM ToggleBorders
+
+DestroyFunc WineMaximizeHack
+AddToFunc WineMaximizeHack
++ I Current (Maximized) WindowStyle Borders
++ I TestRc (NoMatch) WindowStyle !Borders
++ I UpdateStyles
++ I RefreshWindow
++ I Maximize ewmhiwa growonwindowlayer
++ I RefreshWindow
++ I Maximize forget
 
 # toggle maximize
 # ctrl-alt-mto
@@ -953,6 +1082,7 @@ Silent Key b A CM ToggleBorders
 # Silent Key m A CM "Maximize ewmhiwa"
 # turn off borders:
 Silent Key m A CM "ToggleBordersMaximize"
+# Silent Key ("edge_en.exe") m A CM "WineMaximizeHack"
 Silent Key n A CM "ToggleTitle"
 
 # Simple run dialogue
@@ -985,13 +1115,18 @@ Silent Key F2 A M Exec exec $[HOME]/bin/rundlg
 Silent Key Print A A Exec exec $HOME/bin/ffmpeg-dump-ui.py
 # Alt-Print Screen (fullscreen screenshot)
 #Silent Key Print A M Exec exec $HOME/bin/xwdui-root.py
-Silent Key Print A M Exec exec $HOME/bin/ffmpeg-dump-ui-root.py
+
+#Silent Key Print A M Exec exec $HOME/bin/ffmpeg-dump-ui-root.py
+# due to dumb problems with portable pc iii keyboard,
+# i remapped sysrq to multi_key for ps/2 in hwdb, so i have to do this.
+Silent Key Multi_key A M Exec exec $HOME/bin/ffmpeg-dump-ui-root.py
 
 # Alt-F4 closes a window
 Silent Key F4 A M Close
 
 # alt-t opens a terminal
-Silent Key 't' A M Exec exec mate-terminal
+Silent Key 't' A M Exec exec xterm
+Silent Key 't' A MS Exec exec mate-terminal
 
 # alt-s opens seamonkey
 Silent Key 's' A M Exec exec seamonkey
@@ -1017,19 +1152,23 @@ Mouse 3 4 A ToggleBordersMaximize ewmhiwa 100 0
 #Mouse 1 6 A Iconify
 Mouse 1 4 A Iconify
 
-# alt+click drag to move window, pass alt cick through to photoshop
+# alt+click drag to move window
 AddToFunc FuncMoveWin
 + M ThisWindow $0
 #+ I Raise
-# + M $0
-
-#+ M ThisWindow ("photoshop.exe") FakeKeypress release Meta_L
-#+ M ThisWindow ("photoshop.exe") FakeClick depth 3 modifiers 1 press 1 wait 10 release 1
 #+ D Lower
 # move with alt+click
+
 Mouse 1 W M FuncMoveWin Move
 Mouse ("photoshop.exe") 1 W M --
-# Mouse (photoshop.exe) 1 T N Move
+Silent Key ("photoshop.exe") 'e' A CM Exec exec $HOME/bin/export_ps
+
+# edge scrolling
+#Mouse ("edge_en.exe") 4 W N FakeKeyPress press Up
+#Mouse ("edge_en.exe") 7 W N FakeKeyPress press Right
+#Mouse ("edge_en.exe") 5 W N FakeKeyPress press Down
+#Mouse ("edge_en.exe") 6 W N FakeKeyPress press Left
+
 # window menu popup with alt+shift+rightclick
 Mouse 3 W MS Menu MenuWindowOpsLong
 
@@ -1238,6 +1377,8 @@ MenuStyle Mwm
 # Default window colors for all:
 Style * Colorset 1, HilightColorset 2
 
+# Colorset 17, HilightColorset 17
+
 # Exceptions to the above:
 # formerly Colorset 1, HilightColorset 15:
 Style MComix Colorset 15, HilightColorset 15
@@ -1285,9 +1426,12 @@ Style xvkbd NeverFocus, StaysOnTop, Sticky
 # Alternate on screen keyboard
 Style Florence NeverFocus, StaysOnTop, Sticky
 
+# screenshot tool
+Style "Tkscreengrabber" StaysOnTop, Sticky
 # My custom applet
 Style TabletPC_Applet_Menu NeverFocus, StaysOnTop, Sticky
 Style Wyatt_RunDlg StaysOnTop, Sticky
+Style Categorize_mcomix StaysOnTop, Sticky, !Button 2
 # Style TabletPC_UnitConv NeverFocus, StaysOnTop, Sticky, !Button 4, !Button 2
 Style TabletPC_UnitConv Sticky, !Button 4, !Button 2
 # Remove iconify and maximize buttons from custom tabletPC applet
